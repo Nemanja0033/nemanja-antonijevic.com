@@ -1,0 +1,88 @@
+export const meta = {
+  title: "Markdown showcase",
+  description: "An example post that uses every element the blog styles can target.",
+  date: "2026-10-09",
+};
+
+# Markdown showcase
+
+This is an example post. It uses every element you can style in `post.module.css`, so you can see how each one renders.
+
+## Text formatting
+
+Regular paragraph text with **bold**, _italic_, ~~strikethrough~~ and `inline code`. A paragraph can also contain a [link to the blog](/blog) or an [external link](https://nextjs.org).
+
+A second paragraph, to check spacing between paragraphs. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+### Third level heading
+
+#### Fourth level heading
+
+##### Fifth level heading
+
+###### Sixth level heading
+
+## Lists
+
+Unordered list:
+
+- First item
+- Second item
+  - Nested item
+  - Another nested item
+- Third item
+
+Ordered list:
+
+1. Step one
+2. Step two
+3. Step three
+
+Task list:
+
+- [x] Set up Next.js
+- [x] Configure MDX
+- [ ] Write more posts
+
+## Blockquote
+
+> Good writing is rewriting.
+>
+> A second paragraph inside the quote.
+
+---
+
+## Code
+
+Inline code looks like `const a = 1`. A code block:
+
+```ts
+type Post = {
+  slug: string;
+  title: string;
+};
+
+export function greet(post: Post) {
+  return `Reading ${post.title}`;
+}
+```
+
+## Table
+
+| Element    | Markdown syntax | Rendered as  |
+| ---------- | --------------- | ------------ |
+| Heading    | `## Title`      | `<h2>`       |
+| Bold       | `**text**`      | `<strong>`   |
+| Blockquote | `> text`        | `<blockquote>` |
+
+## Image
+
+![Placeholder image](https://placehold.co/800x400)
+
+## Raw HTML and JSX
+
+Because this is MDX, you can also write JSX directly:
+
+<p>
+  A paragraph written as <strong>JSX</strong>.
+</p>

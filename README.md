@@ -27,10 +27,15 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 ```bash
 ./dev.sh new     # new post, step by step: languages, titles, slug, date, tags, cover
 ./dev.sh posts   # every post with its date and languages
+./dev.sh check-post <slug>  # structural check of a post (meta, links, headings, translations)
 ./dev.sh version # bump patch/minor/major, add a CHANGELOG.md entry; the footer shows it
 ./dev.sh dev     # dev server on http://localhost:3000
 ./dev.sh check   # lint + TypeScript + production build
 ```
+
+To proofread a post (grammar in both languages plus the structural check), ask Claude Code to "check the post <slug>": the project skill in `.claude/skills/check-post/` handles it.
+
+To change how a post sounds without changing what it says, ask for a tone: `tone-professional` (clear, neutral), `tone-casual` (conversational) or `tone-cool` (witty, zine style), e.g. "make the post <slug> cooler". They rewrite both languages and keep facts, code, links, date, tags and the slug; `git diff` shows the change.
 
 ## Writing posts
 

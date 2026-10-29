@@ -326,6 +326,9 @@ Upotreba: ./dev.sh <komanda>
 
   new     Novi blog zapis, korak po korak (jezici, naslov, slug, datum, tagovi, cover)
   posts   Lista zapisa sa datumom i jezicima
+  check-post <slug>
+          Strukturna provera zapisa (meta, linkovi, naslovi, kod, prevodi);
+          za gramatiku pitaj Claude-a: "proveri post <slug>" (skill check-post)
   version [patch|minor|major]
           Podigni verziju (bez argumenta pita), dopiši CHANGELOG.md;
           verzija se prikazuje u footeru
@@ -341,6 +344,7 @@ EOF
 case "${1:-help}" in
   new) cmd_new ;;
   posts) cmd_posts ;;
+  check-post) node .claude/skills/check-post/scripts/check-post.mjs "${2:?Upotreba: ./dev.sh check-post <slug>}" ;;
   version) cmd_version "${2:-}" ;;
   dev) npm run dev ;;
   build) npx next build ;;

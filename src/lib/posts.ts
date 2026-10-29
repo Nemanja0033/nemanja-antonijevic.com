@@ -1,7 +1,8 @@
-import { readdir } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import type { StaticImageData } from "next/image";
 import { notFound } from "next/navigation";
+import GithubSlugger from "github-slugger";
 
 export type PostMeta = {
   title: string;
@@ -13,7 +14,10 @@ export type PostMeta = {
 export type PostSummary = PostMeta & {
   slug: string;
   cover: StaticImageData;
+  readingMinutes: number;
 };
+
+export type Heading = { id: string; text: string };
 
 // Each post is a folder: content/blog/<slug>/index.mdx + cover.{jpg,png,webp}
 const CONTENT_DIR = path.join(process.cwd(), "content", "blog");
@@ -71,15 +75,18 @@ export async function getPost(slug: string) {
 
   // Static imports: the bundler compiles every post and cover at build time,
   // and the cover comes with width, height and a blur placeholder for next/image
-  const [mod, coverMod] = await Promise.all([
+  const [mod, coverMod, source] = await Promise.all([
     import(`../../content/blog/${slug}/index.mdx`),
     import(`../../content/blog/${slug}/cover.${file.coverExt}`),
+    readFile(path.join(CONTENT_DIR, slug, "index.mdx"), "utf8"),
   ]);
 
   return {
     Content: mod.default,
     meta: parseMeta(slug, mod.meta),
     cover: coverMod.default as StaticImageData,
+    readingMinutes: readingMinutes(source),
+    headings: getHeadings(source),
   };
 }
 
@@ -87,8 +94,8 @@ export async function getAllPosts(): Promise<PostSummary[]> {
   const slugs = await getPostSlugs();
   const posts = await Promise.all(
     slugs.map(async (slug) => {
-      const { meta, cover } = await getPost(slug);
-      return { slug, ...meta, cover };
+      const { meta, cover, readingMinutes } = await getPost(slug);
+      return { slug, ...meta, cover, readingMinutes };
     }),
   );
   return posts.sort((a, b) => b.date.localeCompare(a.date));
@@ -103,6 +110,13 @@ export async function getAllTags(): Promise<{ tag: string; count: number }[]> {
   return [...counts]
     .map(([tag, count]) => ({ tag, count }))
     .sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag));
+}
+
+// The posts right before and after this one, by date
+export async function getAdjacentPosts(slug: string) {
+  const posts = await getAllPosts();
+  const index = posts.findIndex((post) => post.slug === slug);
+  return { newer: posts[index - 1], older: posts[index + 1] };
 }
 
 export async function getPostsByTag(tag: string): Promise<PostSummary[]> {
@@ -122,4 +136,28 @@ export function paginate(posts: PostSummary[], page: number) {
 export function extraPageNumbers(posts: PostSummary[]): string[] {
   const { totalPages } = paginate(posts, 1);
   return Array.from({ length: totalPages - 1 }, (_, i) => String(i + 2));
+}
+
+// Words in the post body (without the meta export) at ~200 words per minute
+function readingMinutes(source: string) {
+  const body = source.replace(/^export const meta[\s\S]*?\n};?\n/m, "");
+  const words = body.split(/\s+/).filter(Boolean).length;
+  return Math.max(1, Math.round(words / 200));
+}
+
+// The post's ## headings with the same ids rehype-slug gives them, for the sidebar
+function getHeadings(source: string): Heading[] {
+  const slugger = new GithubSlugger();
+  const headings: Heading[] = [];
+  let inCode = false;
+  for (const line of source.split("\n")) {
+    if (line.startsWith("```")) inCode = !inCode;
+    const match = !inCode && line.match(/^(#{1,6})\s+(.+?)\s*#*$/);
+    if (!match) continue;
+    // Plain text as rehype-slug sees it: no code ticks, emphasis or link syntax
+    const text = match[2].replace(/\[([^\]]*)\]\([^)]*\)/g, "$1").replace(/[`*_]/g, "");
+    const id = slugger.slug(text); // every level counts toward duplicate ids
+    if (match[1].length === 2) headings.push({ id, text });
+  }
+  return headings;
 }

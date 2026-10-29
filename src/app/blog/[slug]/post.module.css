@@ -1,216 +1,281 @@
-/* Base styles for rendered MDX blog content, built on the tokens in globals.css */
+/* Blog post page and its rendered MDX content, built on the tokens in globals.css */
 
-.post {
+/* Header: back link, title, date / reading time / tag pills */
+.header {
+  padding-block: 2.5rem var(--space-lg);
+}
+.crumb {
+  margin: 0 0 1.25rem;
+  font-size: 0.9375rem;
+  color: var(--color-muted);
+}
+.crumb a {
+  font-weight: 800;
+  color: var(--color-primary);
+}
+.crumb span {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+}
+.header h1 {
+  max-width: 13em;
+  margin: 0 0 1.75rem;
+  font-size: clamp(2.125rem, 6vw, 4.5rem);
+  font-weight: 800;
+  line-height: 1.03;
+  letter-spacing: -0.03em;
+  overflow-wrap: anywhere;
+}
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.625rem;
+}
+
+.cover {
+  display: block;
   width: 100%;
+  height: auto;
+  aspect-ratio: 21 / 9;
+  object-fit: cover;
+  margin-bottom: var(--space-lg);
+  border-radius: var(--radius-lg);
+}
+
+/* Text column + sidebar, the sidebar drops below on narrow screens */
+.layout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2.5rem 4rem;
+}
+.content {
+  flex: 1 1 35rem;
   max-width: var(--post-width);
-  margin-inline: auto;
-  padding: var(--space-lg) var(--space-md) var(--space-xl);
-  font-size: 1.125rem;
-  line-height: 1.75;
-  color: var(--color-foreground);
+  min-width: 0;
+  font-size: 1.1875rem;
+  line-height: 1.7;
   overflow-wrap: break-word;
 }
+.aside {
+  flex: 0 1 15rem;
+  align-self: flex-start;
+  min-width: 12.5rem;
+  padding: var(--space-md);
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+}
+.aside h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+  font-weight: 800;
+}
+.aside ol {
+  margin: 0 0 var(--space-md);
+  padding-left: 1.25rem;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+.aside li + li {
+  margin-top: var(--space-sm);
+}
+.aside ol:last-child {
+  margin-bottom: 0;
+}
+
+/* Older / newer post cards */
+.adjacent {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: var(--space-xl);
+}
+.adjacent > * {
+  flex: 1 1 17.5rem;
+  min-width: 0;
+  padding: var(--space-md) 1.75rem;
+  border-radius: var(--radius-lg);
+  font-size: 1.375rem;
+  font-weight: 800;
+  line-height: 1.25;
+}
+.adjacent > a {
+  background: var(--color-surface);
+}
+.adjacent > div {
+  background: var(--color-tint);
+  font-weight: 600;
+}
+.adjacent > :last-child {
+  text-align: right;
+}
+.adjacent span {
+  display: block;
+  margin-bottom: var(--space-sm);
+  font-size: 0.875rem;
+  font-weight: 800;
+  color: var(--color-muted);
+}
+.adjacent > a span {
+  color: var(--color-primary);
+}
+
+/* ---------- MDX content ---------- */
 
 /* Vertical rhythm: every direct child is spaced from the previous one */
-.post > * {
+.content > * {
   margin-block: 0;
 }
-.post > * + * {
+.content > * + * {
   margin-top: var(--space-md);
 }
 
-/* Post header and cover, rendered from the post's `meta` */
-.header time {
-  display: block;
-  margin-top: var(--space-sm);
-  font-size: 1rem;
-  color: var(--color-muted);
-}
-/* TagList in the header: undo the post list styles it would otherwise inherit */
-.post .header ul {
-  margin: var(--space-md) 0 0;
-  padding: 0;
-  list-style: none;
-}
-.post .header li {
-  margin: 0;
-  padding: 0;
-}
-.post > .cover {
-  width: 100%;
-  height: auto;
-  margin-top: var(--space-lg);
-  border-radius: var(--radius);
+/* Lead paragraph */
+.content > p:first-child {
+  font-size: 1.375rem;
+  line-height: 1.55;
+  font-weight: 600;
 }
 
-/* Headings */
-.post :is(h1, h2, h3, h4, h5, h6) {
-  font-family: var(--font-sans);
-  font-weight: 700;
-  line-height: 1.2;
+/* Headings; mdx-components.tsx wraps h2 text in a <span> for the yellow highlight */
+.content :is(h2, h3, h4, h5, h6) {
+  font-weight: 800;
   letter-spacing: -0.01em;
-  color: var(--color-foreground);
+  text-wrap: balance;
+  scroll-margin-top: var(--space-md);
 }
-.post h1 {
-  font-size: 3rem;
-  letter-spacing: -0.02em;
-}
-.post h2 {
-  font-size: 1.875rem;
-  margin-top: var(--space-xl);
-  padding-bottom: var(--space-sm);
-  border-bottom: 1px solid var(--color-border);
-}
-.post h3 {
-  font-size: 1.5rem;
+.content h2 {
   margin-top: var(--space-lg);
+  font-size: 1.75rem;
+  line-height: 1.5;
 }
-.post h4 {
-  font-size: 1.25rem;
-  margin-top: var(--space-lg);
+.content h2 > span {
+  padding: 0 0.625rem;
+  border-radius: 0.625rem;
+  background: var(--color-highlight);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
 }
-.post h5 {
+.content h3 {
+  margin-top: 2.5rem;
+  font-size: 1.375rem;
+  line-height: 1.3;
+}
+.content :is(h4, h5, h6) {
+  margin-top: 2rem;
   font-size: 1.125rem;
-  margin-top: var(--space-lg);
+  line-height: 1.3;
 }
-.post h6 {
-  font-size: 1rem;
-  margin-top: var(--space-lg);
+.content h6 {
   color: var(--color-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
-.post :is(h1, h2, h3, h4, h5, h6) + * {
-  margin-top: var(--space-md);
+.content > :is(h2, h3, h4, h5, h6) + * {
+  margin-top: 1rem;
 }
 
 /* Text */
-.post p {
+.content strong {
+  font-weight: 800;
 }
-.post strong {
-  font-weight: 600;
-}
-.post em {
-  font-style: italic;
-}
-.post del {
+.content del {
   color: var(--color-muted);
 }
-.post small {
-  font-size: 0.875rem;
-  color: var(--color-muted);
-}
-.post mark {
-  padding: 0.1em 0.25em;
-  background: color-mix(in srgb, var(--color-secondary) 35%, transparent);
+.content mark {
+  padding: 0 0.25em;
+  border-radius: var(--radius-sm);
+  background: var(--color-highlight);
   color: inherit;
-  border-radius: calc(var(--radius) / 2);
 }
 
 /* Links */
-.post a {
+.content a {
   color: var(--color-primary);
   text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.2em;
-  transition: color 150ms ease;
-}
-.post a:hover {
-  color: var(--color-primary-hover);
   text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
 }
 
 /* Lists */
-.post :is(ul, ol) {
-  padding-left: var(--space-md);
+.content :is(ul, ol) {
+  padding-left: 1.5rem;
 }
-.post ul {
-  list-style: disc;
-}
-.post ol {
-  list-style: decimal;
-}
-.post li {
-  padding-left: var(--space-sm);
-}
-.post li + li {
+.content li + li,
+.content li > :is(ul, ol) {
   margin-top: var(--space-sm);
 }
-.post li > :is(ul, ol) {
-  margin-top: var(--space-sm);
-}
-.post li::marker {
+.content li::marker {
   color: var(--color-muted);
 }
-/* GFM task lists */
-.post li:has(> input[type="checkbox"]) {
+.content li:has(> input[type="checkbox"]) {
   list-style: none;
-  margin-left: calc(var(--space-md) * -1);
+  margin-left: -1.5rem;
 }
-.post input[type="checkbox"] {
+.content input[type="checkbox"] {
   margin-right: var(--space-sm);
   accent-color: var(--color-primary);
 }
 
-/* Quote & divider */
-.post blockquote {
-  margin-inline: 0;
-  padding: var(--space-sm) var(--space-md);
-  border-left: 4px solid var(--color-primary);
-  background: var(--color-surface);
-  border-radius: 0 var(--radius) var(--radius) 0;
-  color: var(--color-muted);
-  font-style: italic;
+/* Quote and divider */
+.content blockquote {
+  margin: var(--space-lg) 0;
+  padding: 1.75rem 2rem;
+  border-radius: 1.75rem;
+  background: var(--color-tint);
+  font-size: clamp(1.5rem, 3vw, 1.875rem);
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
 }
-.post blockquote > * {
+.content blockquote > * {
   margin-block: 0;
 }
-.post blockquote > * + * {
+.content blockquote > * + * {
   margin-top: var(--space-sm);
 }
-.post hr {
+.content hr {
   margin-block: var(--space-lg);
   border: 0;
-  border-top: 1px solid var(--color-border);
+  border-top: 2px solid var(--color-border);
 }
 
 /* Code */
-.post code {
+.content code {
+  padding: 0.0625rem 0.5rem;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-muted);
   font-family: var(--font-mono);
-  font-size: 0.875em;
-  padding: 0.15em 0.4em;
-  background: var(--color-code-bg);
-  border: 1px solid var(--color-border);
-  border-radius: calc(var(--radius) / 2);
+  font-size: 0.82em;
 }
-.post pre {
+.content pre {
   overflow-x: auto;
-  padding: var(--space-md) var(--space-md);
-  background: var(--color-code-bg);
-  border: 1px solid var(--color-border);
+  padding: 1.25rem var(--space-md);
   border-radius: var(--radius);
-  font-size: 0.875rem;
-  line-height: 1.5;
+  background: var(--color-code-bg);
+  color: var(--color-code-fg);
+  font-family: var(--font-mono);
+  font-size: 0.9375rem;
+  line-height: 1.7;
 }
-.post pre code {
+.content pre code {
   padding: 0;
   background: none;
-  border: 0;
   font-size: inherit;
 }
 
 /* Media */
-.post img,
-.post video {
+.content img,
+.content video {
   display: block;
   max-width: 100%;
   height: auto;
   border-radius: var(--radius);
 }
-.post figure {
+.content figure {
   margin-inline: 0;
 }
-.post figcaption {
+.content figcaption {
   margin-top: var(--space-sm);
   font-size: 0.875rem;
   color: var(--color-muted);
@@ -218,45 +283,35 @@
 }
 
 /* Tables (remark-gfm), wrapped in a scroll container by mdx-components.tsx */
-.post [data-table-wrapper] {
+.content [data-table-wrapper] {
   overflow-x: auto;
+  border-radius: var(--radius);
+  background: var(--color-surface);
 }
-.post table {
+.content table {
   width: 100%;
   border-collapse: collapse;
   font-size: 1rem;
 }
-.post thead {
-  background: var(--color-surface);
+.content tr + tr {
+  border-top: 1px solid var(--color-border);
 }
-.post tbody tr:nth-child(even) {
-  background: var(--color-surface);
-}
-.post tr {
-  border-bottom: 1px solid var(--color-border);
-}
-.post :is(th, td) {
-  padding: var(--space-sm) var(--space-md);
+.content :is(th, td) {
+  padding: 0.75rem 1rem;
   text-align: left;
   vertical-align: top;
 }
-.post th {
-  font-weight: 600;
+.content th {
+  font-weight: 800;
   white-space: nowrap;
+  background: var(--color-tint);
 }
 
-@media (max-width: 40rem) {
-  .post {
-    font-size: 1rem;
-    padding-block: var(--space-lg) var(--space-xl);
-  }
-  .post h1 {
-    font-size: 2.25rem;
-  }
-  .post h2 {
-    font-size: 1.5rem;
-  }
-  .post h3 {
-    font-size: 1.25rem;
-  }
+/* GFM footnotes */
+.content [data-footnotes] {
+  margin-top: var(--space-lg);
+  padding-top: var(--space-md);
+  border-top: 2px solid var(--color-border);
+  font-size: 0.9375rem;
+  color: var(--color-muted);
 }

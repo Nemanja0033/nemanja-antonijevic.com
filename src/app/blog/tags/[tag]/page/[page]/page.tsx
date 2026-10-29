@@ -20,8 +20,8 @@ export async function generateMetadata({
 }: PageProps<"/blog/tags/[tag]/page/[page]">): Promise<Metadata> {
   const { tag, page } = await params;
   return {
-    title: `#${tag} – Page ${page}`,
-    description: `Blog posts tagged #${tag}`,
+    title: `#${tag} – strana ${page}`,
+    description: `Zapisi sa oznakom #${tag}`,
     alternates: { canonical: `/blog/tags/${tag}/page/${page}` },
   };
 }

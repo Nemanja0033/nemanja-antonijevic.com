@@ -31,11 +31,14 @@ export default async function Image({
           flexDirection: "column",
           justifyContent: "space-between",
           padding: 80,
-          background: "linear-gradient(135deg, #0b1120 0%, #1e1b4b 100%)",
-          color: "#e2e8f0",
+          background: "#f4f1ea",
+          color: "#1e1e1e",
         }}
       >
-        <div style={{ fontSize: 28, color: "#818cf8" }}>{site.name}</div>
+        <div style={{ display: "flex", alignItems: "center", gap: 16, fontSize: 30, fontWeight: 700 }}>
+          <div style={{ width: 22, height: 22, borderRadius: 11, background: "#2236c9" }} />
+          {site.name}
+        </div>
         <div
           style={{
             fontSize: 72,
@@ -46,8 +49,10 @@ export default async function Image({
         >
           {meta.title}
         </div>
-        <div style={{ fontSize: 28, color: "#94a3b8" }}>
-          {formatDate(meta.date)}
+        <div style={{ display: "flex" }}>
+          <div style={{ padding: "6px 24px", borderRadius: 999, background: "#e3e7fb", fontSize: 28 }}>
+            {formatDate(meta.date, "long")}
+          </div>
         </div>
       </div>
     ),

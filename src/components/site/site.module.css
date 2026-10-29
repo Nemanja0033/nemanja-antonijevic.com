@@ -1,0 +1,41 @@
+/* Site header and footer, built on the tokens in globals.css */
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  padding-block: 1.25rem;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  min-height: 44px;
+  font-size: 1.375rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.brand::before {
+  content: "";
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--color-primary);
+}
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem var(--space-md);
+  margin-top: var(--space-xl);
+  padding-block: var(--space-md) 2rem;
+  font-size: 0.9375rem;
+  color: var(--color-muted);
+}
+.footer .note {
+  background: var(--color-highlight);
+  color: var(--color-foreground);
+}

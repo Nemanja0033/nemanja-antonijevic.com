@@ -15,7 +15,7 @@ export async function generateMetadata({
   const { tag } = await params;
   return {
     title: `#${tag}`,
-    description: `Blog posts tagged #${tag}`,
+    description: `Zapisi sa oznakom #${tag}`,
     alternates: { canonical: `/blog/tags/${tag}` },
   };
 }

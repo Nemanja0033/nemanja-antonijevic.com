@@ -25,6 +25,12 @@ const components: MDXComponents = {
   // Inline images have unknown dimensions, so they stay plain <img> but load lazily
   // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
   img: (props) => <img loading="lazy" decoding="async" {...props} />,
+  // The inner span carries the yellow highlight, so it follows the text when it wraps
+  h2: ({ children, ...props }) => (
+    <h2 {...props}>
+      <span>{children}</span>
+    </h2>
+  ),
   // Wide tables scroll inside this wrapper, so the table itself can stay full width
   table: (props) => (
     <div data-table-wrapper="" tabIndex={0}>

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Card, Pill } from "@/components/ui";
 import { formatDate, getDictionary, localePath, type Locale } from "@/i18n";
 import type { PostSummary } from "@/lib/posts";
 import { TagList } from "./tag-list";
@@ -15,12 +16,12 @@ export function PostList({ lang, posts }: { lang: Locale; posts: PostSummary[] }
         const path = localePath(lang, `/blog/${post.slug}`);
         return (
           <li key={post.slug}>
-            <article className={styles.card}>
+            <Card as="article" className={styles.card}>
               <div className={styles.body}>
                 <div className={styles.meta}>
-                  <time dateTime={post.date} className="pill">
-                    {formatDate(lang, post.date)}
-                  </time>
+                  <Pill>
+                    <time dateTime={post.date}>{formatDate(lang, post.date)}</time>
+                  </Pill>
                   <span>{dict.post.readingTime(post.readingMinutes)}</span>
                 </div>
                 <h2>
@@ -39,7 +40,7 @@ export function PostList({ lang, posts }: { lang: Locale; posts: PostSummary[] }
                 sizes="(max-width: 40rem) 100vw, 14rem"
                 className={styles.cover}
               />
-            </article>
+            </Card>
           </li>
         );
       })}

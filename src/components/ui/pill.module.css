@@ -1,0 +1,15 @@
+/* Small rounded label for metadata, built on the tokens in globals.css */
+.pill {
+  display: inline-block;
+  padding: 0.125rem 0.875rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.6;
+}
+.tint {
+  background: var(--color-tint);
+}
+.highlight {
+  background: var(--color-highlight);
+}

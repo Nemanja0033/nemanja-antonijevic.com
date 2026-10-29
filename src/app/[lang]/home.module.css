@@ -39,44 +39,13 @@
   rotate: 6deg;
 }
 
-/* LinkedIn and e-mail as small bubbles in the same soft shape */
+/* Row of LinkedIn and e-mail bubbles (components/ui/icon-bubble) */
 .contact {
   display: flex;
   gap: 1rem;
   margin: 0;
   padding: 0;
   list-style: none;
-}
-.contact a {
-  display: grid;
-  place-items: center;
-  width: 56px;
-  aspect-ratio: 1;
-  border-radius: 46% 54% 52% 48% / 55% 44% 56% 45%;
-  background: var(--color-tint);
-  color: var(--color-primary);
-  transition:
-    scale 150ms ease,
-    background-color 150ms ease,
-    color 150ms ease;
-}
-.contact li:nth-child(2) a {
-  background: var(--color-highlight);
-  color: var(--color-foreground);
-}
-.contact a:hover {
-  scale: 1.08;
-  background: var(--color-primary);
-  color: var(--color-on-primary);
-}
-.contact svg {
-  width: 24px;
-  height: 24px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
 }
 
 /* The dots wander slowly, each along its own loop, so they never move in sync */
@@ -211,16 +180,11 @@
 .hero h1 em {
   color: var(--color-primary);
 }
+/* Placement of the "Blog →" Button: left-aligned, slightly tilted like the design */
 .cta {
   align-self: flex-start;
   margin-top: 2.5rem;
-  padding: 0.75rem 1.75rem;
-  border-radius: var(--radius-pill);
-  background: var(--color-primary);
-  color: var(--color-on-primary);
-  font-size: 1.1875rem;
-  font-weight: 800;
-  transform: rotate(-1.5deg);
+  rotate: -1.5deg;
 }
 
 
@@ -244,12 +208,5 @@
   .contact {
     flex-direction: column;
     gap: 0.5rem;
-  }
-  .contact a {
-    width: 44px;
-  }
-  .contact svg {
-    width: 20px;
-    height: 20px;
   }
 }

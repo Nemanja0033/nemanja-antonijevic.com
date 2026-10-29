@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Button } from "@/components/ui";
 import { getDictionary, localePath, type Locale } from "@/i18n";
 import styles from "./blog.module.css";
 
@@ -9,24 +9,26 @@ export function Pagination({ lang, page, totalPages, basePath }: Props) {
   if (totalPages <= 1) return null;
   const dict = getDictionary(lang).pagination;
   const href = (n: number) => localePath(lang, n === 1 ? basePath : `${basePath}/page/${n}`);
+  const hasNewer = page > 1;
+  const hasOlder = page < totalPages;
 
   return (
     <nav aria-label={dict.label} className={styles.pagination}>
-      {page > 1 ? (
-        <Link href={href(page - 1)} rel="prev" className={styles.step}>
-          {dict.newer}
-        </Link>
-      ) : (
-        <span className={styles.step}>{dict.newer}</span>
-      )}
+      <Button
+        href={hasNewer ? href(page - 1) : undefined}
+        variant={hasNewer ? "primary" : "muted"}
+        rel="prev"
+      >
+        {dict.newer}
+      </Button>
       <span>{dict.page(page, totalPages)}</span>
-      {page < totalPages ? (
-        <Link href={href(page + 1)} rel="next" className={styles.step}>
-          {dict.older}
-        </Link>
-      ) : (
-        <span className={styles.step}>{dict.older}</span>
-      )}
+      <Button
+        href={hasOlder ? href(page + 1) : undefined}
+        variant={hasOlder ? "primary" : "muted"}
+        rel="next"
+      >
+        {dict.older}
+      </Button>
     </nav>
   );
 }

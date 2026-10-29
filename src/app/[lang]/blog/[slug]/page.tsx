@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { TagList } from "@/components/blog/tag-list";
+import { Card, Pill } from "@/components/ui";
 import { alternates, formatDate, getDictionary, localePath, toLocale } from "@/i18n";
 import { getAdjacentPosts, getPost, getPostLanguages, getPostSlugs } from "@/lib/posts";
 import { site } from "@/lib/site";
@@ -75,10 +76,10 @@ export default async function BlogPostPage({
         </p>
         <h1>{meta.title}</h1>
         <div className={styles.meta}>
-          <time dateTime={meta.date} className="pill">
-            {formatDate(lang, meta.date, "long")}
-          </time>
-          <span className="pill">{dict.post.readingTime(readingMinutes)}</span>
+          <Pill>
+            <time dateTime={meta.date}>{formatDate(lang, meta.date, "long")}</time>
+          </Pill>
+          <Pill>{dict.post.readingTime(readingMinutes)}</Pill>
           <TagList lang={lang} tags={meta.tags} />
         </div>
       </header>
@@ -97,7 +98,7 @@ export default async function BlogPostPage({
           <Content />
         </div>
         {(headings.length > 0 || meta.tags.length > 0) && (
-          <aside className={styles.aside}>
+          <Card as="aside" className={styles.aside}>
             {headings.length > 0 && (
               <>
                 <h2>{dict.post.onThisPage}</h2>
@@ -116,32 +117,32 @@ export default async function BlogPostPage({
                 <TagList lang={lang} tags={meta.tags} />
               </>
             )}
-          </aside>
+          </Card>
         )}
       </div>
 
       <nav aria-label={dict.post.adjacentLabel} className={styles.adjacent}>
         {older ? (
-          <Link href={localePath(lang, `/blog/${older.slug}`)}>
+          <Card href={localePath(lang, `/blog/${older.slug}`)}>
             <span>{dict.post.older}</span>
             {older.title}
-          </Link>
+          </Card>
         ) : (
-          <div>
+          <Card tone="tint">
             <span>{dict.post.older}</span>
             {dict.post.firstPost}
-          </div>
+          </Card>
         )}
         {newer ? (
-          <Link href={localePath(lang, `/blog/${newer.slug}`)}>
+          <Card href={localePath(lang, `/blog/${newer.slug}`)}>
             <span>{dict.post.newer}</span>
             {newer.title}
-          </Link>
+          </Card>
         ) : (
-          <div>
+          <Card tone="tint">
             <span>{dict.post.newer}</span>
             {dict.post.latestPost}
-          </div>
+          </Card>
         )}
       </nav>
 

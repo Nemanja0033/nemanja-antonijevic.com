@@ -1,0 +1,17 @@
+/* Rounded content surfaces, built on the tokens in globals.css */
+.card {
+  display: block;
+  padding: var(--space-md) 1.75rem;
+  border-radius: var(--radius-lg);
+}
+.surface {
+  background: var(--color-surface);
+}
+.tint {
+  background: var(--color-tint);
+}
+a.card:hover {
+  text-decoration: none;
+  outline: 2px solid var(--color-primary);
+  outline-offset: -2px;
+}

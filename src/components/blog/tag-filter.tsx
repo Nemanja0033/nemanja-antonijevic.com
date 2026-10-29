@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Chip } from "@/components/ui";
 import { getDictionary, localePath, type Locale } from "@/i18n";
 import styles from "./blog.module.css";
 
@@ -16,9 +16,9 @@ export function TagFilter({ lang, tags, active }: Props) {
       <ul className={styles.filter}>
         {items.map(({ label, path, current }) => (
           <li key={path}>
-            <Link href={localePath(lang, path)} aria-current={current ? "page" : undefined}>
+            <Chip href={localePath(lang, path)} variant="filter" active={current}>
               {label}
-            </Link>
+            </Chip>
           </li>
         ))}
       </ul>

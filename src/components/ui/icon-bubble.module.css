@@ -1,0 +1,44 @@
+/* Round icon link in the soft "blob" shape of the home page, built on the tokens in globals.css */
+.bubble {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  aspect-ratio: 1;
+  border-radius: 46% 54% 52% 48% / 55% 44% 56% 45%;
+  transition:
+    scale 150ms ease,
+    background-color 150ms ease,
+    color 150ms ease;
+}
+.tint {
+  background: var(--color-tint);
+  color: var(--color-primary);
+}
+.highlight {
+  background: var(--color-highlight);
+  color: var(--color-foreground);
+}
+.bubble:hover {
+  scale: 1.08;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+}
+.bubble svg {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (max-width: 700px) {
+  .bubble {
+    width: 44px;
+  }
+  .bubble svg {
+    width: 20px;
+    height: 20px;
+  }
+}

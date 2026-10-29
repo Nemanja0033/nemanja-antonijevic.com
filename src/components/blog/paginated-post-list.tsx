@@ -1,3 +1,4 @@
+import { Pill } from "@/components/ui";
 import { getDictionary, type Locale } from "@/i18n";
 import { getAllTags, paginate, type PostSummary } from "@/lib/posts";
 import { Pagination } from "./pagination";
@@ -31,7 +32,7 @@ export async function PaginatedPostList({
     <>
       <div className={styles.titleRow}>
         <h1>{title}</h1>
-        <span className="pill">{getDictionary(lang).blog.postCount(posts.length)}</span>
+        <Pill>{getDictionary(lang).blog.postCount(posts.length)}</Pill>
       </div>
       <TagFilter lang={lang} tags={tags.map(({ tag }) => tag)} active={activeTag} />
       <PostList lang={lang} posts={current.posts} />

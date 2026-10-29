@@ -57,13 +57,11 @@
   line-height: 1.7;
   overflow-wrap: break-word;
 }
+/* Layout of the sidebar Card (its surface comes from components/ui/card) */
 .aside {
   flex: 0 1 15rem;
   align-self: flex-start;
   min-width: 12.5rem;
-  padding: var(--space-md);
-  background: var(--color-surface);
-  border-radius: var(--radius-lg);
 }
 .aside h2 {
   margin: 0 0 0.75rem;
@@ -83,7 +81,7 @@
   margin-bottom: 0;
 }
 
-/* Older / newer post cards */
+/* Older / newer post cards (surfaces come from components/ui/card) */
 .adjacent {
   display: flex;
   flex-wrap: wrap;
@@ -93,17 +91,11 @@
 .adjacent > * {
   flex: 1 1 17.5rem;
   min-width: 0;
-  padding: var(--space-md) 1.75rem;
-  border-radius: var(--radius-lg);
   font-size: 1.375rem;
   font-weight: 800;
   line-height: 1.25;
 }
-.adjacent > a {
-  background: var(--color-surface);
-}
 .adjacent > div {
-  background: var(--color-tint);
   font-weight: 600;
 }
 .adjacent > :last-child {

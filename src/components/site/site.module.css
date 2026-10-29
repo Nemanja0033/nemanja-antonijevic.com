@@ -4,7 +4,42 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm) var(--space-md);
   padding-block: 1.25rem;
+}
+/* The language switch stays on the right, also without the brand or when it wraps */
+.header > nav {
+  margin-left: auto;
+}
+
+/* "SR | EN" */
+.languages {
+  display: flex;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0.25rem;
+  list-style: none;
+  border-radius: var(--radius-pill);
+  background: var(--color-surface);
+}
+.languages a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 0.875rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.875rem;
+  font-weight: 800;
+  color: var(--color-muted);
+}
+.languages a:hover {
+  text-decoration: none;
+  color: var(--color-foreground);
+}
+.languages a[aria-current] {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
 }
 
 .brand {

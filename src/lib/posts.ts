@@ -3,12 +3,13 @@ import path from "node:path";
 import type { StaticImageData } from "next/image";
 import { notFound } from "next/navigation";
 import GithubSlugger from "github-slugger";
+import { locales, type Locale } from "@/i18n/config";
 
 export type PostMeta = {
   title: string;
   description?: string;
   date: string; // ISO date, e.g. "2026-10-08"
-  tags: string[]; // URL-safe, e.g. ["nextjs", "css"]; optional in index.mdx
+  tags: string[]; // URL-safe, e.g. ["nextjs", "css"]; optional in index.<lang>.mdx
 };
 
 export type PostSummary = PostMeta & {
@@ -19,14 +20,19 @@ export type PostSummary = PostMeta & {
 
 export type Heading = { id: string; text: string };
 
-// Each post is a folder: content/blog/<slug>/index.mdx + cover.{jpg,png,webp}
+// Each post is a folder: content/blog/<slug>/index.<lang>.mdx (one per language it is
+// written in) + cover.{jpg,png,webp} shared by all languages
 const CONTENT_DIR = path.join(process.cwd(), "content", "blog");
 const COVER_EXTENSIONS = ["jpg", "png", "webp"] as const;
 // Folder names that would collide with static routes under /blog
 const RESERVED_SLUGS = ["tags", "page"];
 const TAG_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 
-type PostFiles = { slug: string; coverExt: (typeof COVER_EXTENSIONS)[number] };
+type PostFiles = {
+  slug: string;
+  coverExt: (typeof COVER_EXTENSIONS)[number];
+  langs: Locale[]; // languages with an index.<lang>.mdx
+};
 
 async function getPostFiles(): Promise<PostFiles[]> {
   const entries = await readdir(CONTENT_DIR, { withFileTypes: true });
@@ -39,62 +45,69 @@ async function getPostFiles(): Promise<PostFiles[]> {
       }
       const files = await readdir(path.join(CONTENT_DIR, slug));
       const coverExt = COVER_EXTENSIONS.find((ext) => files.includes(`cover.${ext}`));
-      if (!files.includes("index.mdx") || !coverExt) {
+      const langs = locales.filter((lang) => files.includes(`index.${lang}.mdx`));
+      if (!langs.length || !coverExt) {
         throw new Error(
-          `content/blog/${slug}/ must contain index.mdx and cover.jpg, cover.png or cover.webp`,
+          `content/blog/${slug}/ must contain index.${locales.join(".mdx or index.")}.mdx and cover.jpg, cover.png or cover.webp`,
         );
       }
-      return { slug, coverExt };
+      return { slug, coverExt, langs };
     }),
   );
 }
 
-export async function getPostSlugs(): Promise<string[]> {
-  return (await getPostFiles()).map(({ slug }) => slug);
+// Slugs of the posts written in this language
+export async function getPostSlugs(lang: Locale): Promise<string[]> {
+  return (await getPostFiles()).filter((post) => post.langs.includes(lang)).map(({ slug }) => slug);
 }
 
-function parseMeta(slug: string, meta: Partial<PostMeta> | undefined): PostMeta {
+// Languages this post is written in, for hreflang links and the language switch
+export async function getPostLanguages(slug: string): Promise<Locale[]> {
+  return (await getPostFiles()).find((post) => post.slug === slug)?.langs ?? [];
+}
+
+function parseMeta(file: string, meta: Partial<PostMeta> | undefined): PostMeta {
   if (!meta?.title || !meta.date || Number.isNaN(Date.parse(meta.date))) {
     throw new Error(
-      `content/blog/${slug}/index.mdx must export \`meta\` with a \`title\` and an ISO \`date\``,
+      `${file} must export \`meta\` with a \`title\` and an ISO \`date\``,
     );
   }
   const tags = meta.tags ?? [];
   const invalid = tags.filter((tag) => !TAG_PATTERN.test(tag));
   if (invalid.length) {
     throw new Error(
-      `content/blog/${slug}/index.mdx has invalid tags (${invalid.join(", ")}); use lowercase letters, digits and dashes`,
+      `${file} has invalid tags (${invalid.join(", ")}); use lowercase letters, digits and dashes`,
     );
   }
   return { ...meta, tags } as PostMeta;
 }
 
-export async function getPost(slug: string) {
+export async function getPost(lang: Locale, slug: string) {
   const file = (await getPostFiles()).find((post) => post.slug === slug);
-  if (!file) notFound();
+  if (!file?.langs.includes(lang)) notFound();
 
   // Static imports: the bundler compiles every post and cover at build time,
   // and the cover comes with width, height and a blur placeholder for next/image
   const [mod, coverMod, source] = await Promise.all([
-    import(`../../content/blog/${slug}/index.mdx`),
+    import(`../../content/blog/${slug}/index.${lang}.mdx`),
     import(`../../content/blog/${slug}/cover.${file.coverExt}`),
-    readFile(path.join(CONTENT_DIR, slug, "index.mdx"), "utf8"),
+    readFile(path.join(CONTENT_DIR, slug, `index.${lang}.mdx`), "utf8"),
   ]);
 
   return {
     Content: mod.default,
-    meta: parseMeta(slug, mod.meta),
+    meta: parseMeta(`content/blog/${slug}/index.${lang}.mdx`, mod.meta),
     cover: coverMod.default as StaticImageData,
     readingMinutes: readingMinutes(source),
     headings: getHeadings(source),
   };
 }
 
-export async function getAllPosts(): Promise<PostSummary[]> {
-  const slugs = await getPostSlugs();
+export async function getAllPosts(lang: Locale): Promise<PostSummary[]> {
+  const slugs = await getPostSlugs(lang);
   const posts = await Promise.all(
     slugs.map(async (slug) => {
-      const { meta, cover, readingMinutes } = await getPost(slug);
+      const { meta, cover, readingMinutes } = await getPost(lang, slug);
       return { slug, ...meta, cover, readingMinutes };
     }),
   );
@@ -102,9 +115,9 @@ export async function getAllPosts(): Promise<PostSummary[]> {
 }
 
 // Every tag with its post count, most used first
-export async function getAllTags(): Promise<{ tag: string; count: number }[]> {
+export async function getAllTags(lang: Locale): Promise<{ tag: string; count: number }[]> {
   const counts = new Map<string, number>();
-  for (const post of await getAllPosts()) {
+  for (const post of await getAllPosts(lang)) {
     for (const tag of post.tags) counts.set(tag, (counts.get(tag) ?? 0) + 1);
   }
   return [...counts]
@@ -113,14 +126,14 @@ export async function getAllTags(): Promise<{ tag: string; count: number }[]> {
 }
 
 // The posts right before and after this one, by date
-export async function getAdjacentPosts(slug: string) {
-  const posts = await getAllPosts();
+export async function getAdjacentPosts(lang: Locale, slug: string) {
+  const posts = await getAllPosts(lang);
   const index = posts.findIndex((post) => post.slug === slug);
   return { newer: posts[index - 1], older: posts[index + 1] };
 }
 
-export async function getPostsByTag(tag: string): Promise<PostSummary[]> {
-  return (await getAllPosts()).filter((post) => post.tags.includes(tag));
+export async function getPostsByTag(lang: Locale, tag: string): Promise<PostSummary[]> {
+  return (await getAllPosts(lang)).filter((post) => post.tags.includes(tag));
 }
 
 export const POSTS_PER_PAGE = 10;

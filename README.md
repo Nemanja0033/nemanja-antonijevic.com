@@ -22,7 +22,18 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 
 ## Writing posts
 
-Each post is a folder in `content/blog/<slug>/` with an `index.mdx` and a cover image (`cover.jpg`, `cover.png` or `cover.webp`). The folder name is the URL slug. `index.mdx` must export `meta`:
+The site is in Serbian (`/sr`, the default; `/` redirects there) and English (`/en`).
+
+Each post is a folder in `content/blog/<slug>/`. The folder name is the URL slug in both languages (`/sr/blog/<slug>`, `/en/blog/<slug>`):
+
+```
+content/blog/<slug>/
+  index.sr.mdx   ← Serbian version (optional)
+  index.en.mdx   ← English version (optional)
+  cover.jpg      ← required, shared by both (or cover.png / cover.webp)
+```
+
+At least one language file is required. A post that exists in only one language has no page in the other; the language switch then goes to that language's blog. Every `index.<lang>.mdx` exports its own `meta`:
 
 ```mdx
 export const meta = {
@@ -35,9 +46,11 @@ export const meta = {
 Post body. The title is rendered from `meta`, so start with `##` headings.
 ```
 
-Each tag gets its own page at `/blog/tags/<tag>`, generated at build time. Lists show 10 posts per page (`/blog/page/2`, `/blog/tags/<tag>/page/2`, …), also generated at build time. A post folder can't be named `tags` or `page`.
+Links to other pages inside a post include the language: `[blog](/sr/blog)`.
 
-The cover is shown in the post list and at the top of the post, optimized by `next/image`. The build fails with a clear error if a post folder is missing `index.mdx` or a cover.
+Each tag gets its own page at `/<lang>/blog/tags/<tag>`. Lists show 10 posts per page (`/<lang>/blog/page/2`, …). A post folder can't be named `tags` or `page`. Reading time and the "on this page" sidebar are computed from the post at build time.
+
+Interface text lives in `src/i18n/dictionaries/` (`sr.ts`, `en.ts`); the build fails if a key is missing in one of them.
 
 Every page, the sitemap, `robots.txt` and the Open Graph images are prerendered at build time, so new content goes live with a rebuild. Set `NEXT_PUBLIC_SITE_URL` (see `.env.example`) to the production URL before building.
 

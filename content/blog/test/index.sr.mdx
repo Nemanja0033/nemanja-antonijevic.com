@@ -1,0 +1,87 @@
+export const meta = {
+  title: "Pregled markdown elemenata",
+  description: "Primer zapisa koji koristi svaki element na koji stilovi bloga mogu da utiču.",
+  date: "2026-10-09",
+  tags: ["mdx", "css"],
+};
+
+Ovo je primer zapisa. Koristi svaki element koji možeš da stilizuješ u `post.module.css`, da vidiš kako se svaki prikazuje.
+
+## Formatiranje teksta
+
+Običan pasus sa **podebljanim**, _kosim_, ~~precrtanim~~ tekstom i `inline kodom`. Pasus može da sadrži i [link ka blogu](/sr/blog) ili [spoljni link](https://nextjs.org).
+
+Drugi pasus, da proverimo razmak između pasusa. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+### Naslov trećeg nivoa
+
+#### Naslov četvrtog nivoa
+
+##### Naslov petog nivoa
+
+###### Naslov šestog nivoa
+
+## Liste
+
+Lista sa tačkama:
+
+- Prva stavka
+- Druga stavka
+  - Ugnježdena stavka
+  - Još jedna ugnježdena stavka
+- Treća stavka
+
+Numerisana lista:
+
+1. Prvi korak
+2. Drugi korak
+3. Treći korak
+
+Lista zadataka:
+
+- [x] Podesiti Next.js
+- [x] Podesiti MDX
+- [ ] Napisati još zapisa
+
+## Citat
+
+> Dobro pisanje je prepisivanje.
+>
+> Drugi pasus unutar citata.
+
+---
+
+## Kod
+
+Inline kod izgleda ovako: `const a = 1`. Blok koda:
+
+```ts
+type Post = {
+  slug: string;
+  title: string;
+};
+
+export function greet(post: Post) {
+  return `Čitam ${post.title}`;
+}
+```
+
+## Tabela
+
+| Element | Markdown sintaksa | Prikazuje se kao |
+| ------- | ----------------- | ---------------- |
+| Naslov  | `## Naslov`       | `<h2>`           |
+| Podebljano | `**tekst**`    | `<strong>`       |
+| Citat   | `> tekst`         | `<blockquote>`   |
+
+## Slika
+
+![Primer slike](https://placehold.co/800x400)
+
+## HTML i JSX
+
+Pošto je ovo MDX, možeš direktno da pišeš i JSX:
+
+<p>
+  Pasus napisan kao <strong>JSX</strong>.
+</p>

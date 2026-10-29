@@ -1,10 +1,22 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import avatar from "@/assets/avatar.jpg";
+import { SiteHeader } from "@/components/site/site-header";
+import { alternates, getDictionary, localePath, toLocale } from "@/i18n";
 import { site } from "@/lib/site";
 import styles from "./home.module.css";
 
-export default function HomePage() {
+export async function generateMetadata({ params }: PageProps<"/[lang]">): Promise<Metadata> {
+  const lang = toLocale((await params).lang);
+  return { alternates: alternates(lang, "") };
+}
+
+export default async function HomePage({ params }: PageProps<"/[lang]">) {
+  const lang = toLocale((await params).lang);
+  const dict = getDictionary(lang);
+  const [before, after] = dict.home.heading;
+
   return (
     <div className={styles.home}>
       <div aria-hidden="true" className={styles.blob} />
@@ -19,17 +31,15 @@ export default function HomePage() {
       />
 
       <div className={`container ${styles.inner}`}>
+        <SiteHeader lang={lang} brand={false} />
+
         <main className={styles.hero}>
+          <p className={styles.eyebrow}>{site.author}</p>
           <h1>
-            Ja sam
-            <br />
-            {site.author}.
+            {before} <em>&amp;</em> {after}
           </h1>
-          <p>
-            Pišem kod <em>&amp;</em> beleške o njemu. Ponekad dobro.
-          </p>
-          <Link href="/blog" className={styles.cta}>
-            Blog →
+          <Link href={localePath(lang, "/blog")} className={styles.cta}>
+            {dict.home.cta}
           </Link>
         </main>
 

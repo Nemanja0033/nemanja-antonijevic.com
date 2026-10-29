@@ -1,25 +1,31 @@
 import { ImageResponse } from "next/og";
+import { formatDate, locales, toLocale } from "@/i18n";
 import { getPost, getPostSlugs } from "@/lib/posts";
-import { formatDate, site } from "@/lib/site";
+import { site } from "@/lib/site";
 
 export const alt = site.name;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-// Only slugs from generateStaticParams exist; anything else is a 404
+// Only posts written in this language exist; anything else is a 404
 export const dynamicParams = false;
 
+// A route handler gets no parent params here, so it lists every language + slug pair
 export async function generateStaticParams() {
-  return (await getPostSlugs()).map((slug) => ({ slug }));
+  const pairs = await Promise.all(
+    locales.map(async (lang) => (await getPostSlugs(lang)).map((slug) => ({ lang, slug }))),
+  );
+  return pairs.flat();
 }
 
 export default async function Image({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ lang: string; slug: string }>;
 }) {
-  const { slug } = await params;
-  const { meta } = await getPost(slug);
+  const { lang: param, slug } = await params;
+  const lang = toLocale(param);
+  const { meta } = await getPost(lang, slug);
 
   return new ImageResponse(
     (
@@ -51,7 +57,7 @@ export default async function Image({
         </div>
         <div style={{ display: "flex" }}>
           <div style={{ padding: "6px 24px", borderRadius: 999, background: "#e3e7fb", fontSize: 28 }}>
-            {formatDate(meta.date, "long")}
+            {formatDate(lang, meta.date, "long")}
           </div>
         </div>
       </div>

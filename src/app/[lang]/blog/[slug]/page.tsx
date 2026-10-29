@@ -1,33 +1,36 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { getAdjacentPosts, getPost, getPostSlugs } from "@/lib/posts";
-import { formatDate, site } from "@/lib/site";
 import { TagList } from "@/components/blog/tag-list";
+import { alternates, formatDate, getDictionary, localePath, toLocale } from "@/i18n";
+import { getAdjacentPosts, getPost, getPostLanguages, getPostSlugs } from "@/lib/posts";
+import { site } from "@/lib/site";
 import styles from "./post.module.css";
 
-// Only slugs from generateStaticParams exist; anything else is a 404
+// Only posts written in this language exist; anything else is a 404
 export const dynamicParams = false;
 
-export async function generateStaticParams() {
-  return (await getPostSlugs()).map((slug) => ({ slug }));
+export async function generateStaticParams({ params }: { params: { lang: string } }) {
+  return (await getPostSlugs(toLocale(params.lang))).map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({
   params,
-}: PageProps<"/blog/[slug]">): Promise<Metadata> {
-  const { slug } = await params;
-  const { meta } = await getPost(slug);
-  const url = `/blog/${slug}`;
+}: PageProps<"/[lang]/blog/[slug]">): Promise<Metadata> {
+  const { lang: param, slug } = await params;
+  const lang = toLocale(param);
+  const { meta } = await getPost(lang, slug);
+  const path = `/blog/${slug}`;
 
   // og:image comes from the colocated opengraph-image.tsx
   return {
     title: meta.title,
     description: meta.description,
-    alternates: { canonical: url },
+    alternates: alternates(lang, path, await getPostLanguages(slug)),
     openGraph: {
       type: "article",
-      url,
+      url: localePath(lang, path),
+      locale: getDictionary(lang).ogLocale,
       title: meta.title,
       description: meta.description,
       publishedTime: meta.date,
@@ -39,13 +42,15 @@ export async function generateMetadata({
 
 export default async function BlogPostPage({
   params,
-}: PageProps<"/blog/[slug]">) {
-  const { slug } = await params;
+}: PageProps<"/[lang]/blog/[slug]">) {
+  const { lang: param, slug } = await params;
+  const lang = toLocale(param);
+  const dict = getDictionary(lang);
   const [{ Content, meta, cover, readingMinutes, headings }, { older, newer }] = await Promise.all([
-    getPost(slug),
-    getAdjacentPosts(slug),
+    getPost(lang, slug),
+    getAdjacentPosts(lang, slug),
   ]);
-  const url = `${site.url}/blog/${slug}`;
+  const url = `${site.url}${localePath(lang, `/blog/${slug}`)}`;
 
   // Structured data for search engines (https://schema.org/BlogPosting)
   const jsonLd = {
@@ -54,6 +59,7 @@ export default async function BlogPostPage({
     headline: meta.title,
     description: meta.description,
     datePublished: meta.date,
+    inLanguage: dict.htmlLang,
     keywords: meta.tags,
     author: { "@type": "Person", name: site.author, url: site.url },
     image: `${url}/opengraph-image`,
@@ -65,15 +71,15 @@ export default async function BlogPostPage({
     <article>
       <header className={styles.header}>
         <p className={styles.crumb}>
-          <Link href="/blog">← blog</Link> <span>/ {slug}</span>
+          <Link href={localePath(lang, "/blog")}>{dict.post.back}</Link> <span>/ {slug}</span>
         </p>
         <h1>{meta.title}</h1>
         <div className={styles.meta}>
           <time dateTime={meta.date} className="pill">
-            {formatDate(meta.date, "long")}
+            {formatDate(lang, meta.date, "long")}
           </time>
-          <span className="pill">{readingMinutes} min čitanja</span>
-          <TagList tags={meta.tags} />
+          <span className="pill">{dict.post.readingTime(readingMinutes)}</span>
+          <TagList lang={lang} tags={meta.tags} />
         </div>
       </header>
 
@@ -94,7 +100,7 @@ export default async function BlogPostPage({
           <aside className={styles.aside}>
             {headings.length > 0 && (
               <>
-                <h2>na ovoj strani</h2>
+                <h2>{dict.post.onThisPage}</h2>
                 <ol>
                   {headings.map(({ id, text }) => (
                     <li key={id}>
@@ -106,35 +112,35 @@ export default async function BlogPostPage({
             )}
             {meta.tags.length > 0 && (
               <>
-                <h2>oznake</h2>
-                <TagList tags={meta.tags} />
+                <h2>{dict.post.tags}</h2>
+                <TagList lang={lang} tags={meta.tags} />
               </>
             )}
           </aside>
         )}
       </div>
 
-      <nav aria-label="Susedni zapisi" className={styles.adjacent}>
+      <nav aria-label={dict.post.adjacentLabel} className={styles.adjacent}>
         {older ? (
-          <Link href={`/blog/${older.slug}`}>
-            <span>← starije</span>
+          <Link href={localePath(lang, `/blog/${older.slug}`)}>
+            <span>{dict.post.older}</span>
             {older.title}
           </Link>
         ) : (
           <div>
-            <span>← starije</span>
-            Ovo je prvi zapis.
+            <span>{dict.post.older}</span>
+            {dict.post.firstPost}
           </div>
         )}
         {newer ? (
-          <Link href={`/blog/${newer.slug}`}>
-            <span>novije →</span>
+          <Link href={localePath(lang, `/blog/${newer.slug}`)}>
+            <span>{dict.post.newer}</span>
             {newer.title}
           </Link>
         ) : (
           <div>
-            <span>novije →</span>
-            Ovo je najnovije. Navrati kasnije.
+            <span>{dict.post.newer}</span>
+            {dict.post.latestPost}
           </div>
         )}
       </nav>

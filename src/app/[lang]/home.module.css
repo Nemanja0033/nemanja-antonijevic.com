@@ -24,7 +24,22 @@
   aspect-ratio: 1;
   border-radius: var(--shape);
   background: var(--color-tint);
-  transform: translateY(-50%) rotate(6deg);
+  translate: 0 -50%;
+  rotate: 6deg;
+}
+
+/* On load the blob drifts in: fades up, grows a little and settles into its tilt */
+@media (prefers-reduced-motion: no-preference) {
+  .blob {
+    animation: blob-in 1.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+}
+@keyframes blob-in {
+  from {
+    opacity: 0;
+    scale: 0.9;
+    rotate: -6deg;
+  }
 }
 .photo {
   position: absolute;
@@ -127,6 +142,6 @@
     top: 88px;
     right: var(--space-md);
     width: 130px;
-    transform: rotate(6deg);
+    translate: none;
   }
 }

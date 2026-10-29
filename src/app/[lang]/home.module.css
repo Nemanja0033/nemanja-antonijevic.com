@@ -8,21 +8,45 @@
   overflow: hidden;
 }
 
-/* Decorative blobs behind the content */
-.blob,
+/* Decorative dots behind the content */
 .dotYellow,
 .dotAccent {
   position: absolute;
   pointer-events: none;
 }
+/* Blue blob with the photo inside, clipped to the same soft shape */
 .blob {
-  top: 80px;
-  right: -8%;
-  width: min(54vw, 580px);
+  --shape: 58% 42% 47% 53% / 46% 55% 45% 54%;
+  position: absolute;
+  top: 50%;
+  right: 5%;
+  width: min(28vw, 300px); /* small enough for the 400px photo to stay sharp */
   aspect-ratio: 1;
-  border-radius: 58% 42% 47% 53% / 46% 55% 45% 54%;
+  border-radius: var(--shape);
   background: var(--color-tint);
-  transform: rotate(10deg);
+  transform: translateY(-50%) rotate(6deg);
+}
+.photo {
+  position: absolute;
+  inset: 6%;
+  overflow: hidden;
+  border-radius: var(--shape);
+}
+/* Undo the blob's tilt so the photo stays upright */
+.photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: rotate(-6deg) scale(1.12);
+  filter: grayscale(1) contrast(1.05); /* black and white to match the palette */
+}
+/* Duotone: "screen" turns the photo's blacks into the accent blue, whites stay white */
+.photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--color-primary);
+  mix-blend-mode: screen;
 }
 .dotYellow {
   bottom: 150px;
@@ -39,17 +63,6 @@
   aspect-ratio: 1;
   border-radius: 50%;
   background: var(--color-primary);
-}
-
-/* The avatar's white paper disappears into the page through multiply */
-.avatar {
-  position: absolute;
-  right: 2%;
-  bottom: 0;
-  width: auto;
-  height: clamp(380px, 60vw, 740px);
-  mix-blend-mode: multiply;
-  pointer-events: none;
 }
 
 .inner {
@@ -74,7 +87,7 @@
   color: var(--color-muted);
 }
 .hero h1 {
-  max-width: 11em;
+  max-width: min(11em, 60vw); /* stays left of the photo blob */
   margin: 0;
   font-size: clamp(2.25rem, 6vw, 5rem);
   font-weight: 800;
@@ -107,7 +120,13 @@
 }
 
 @media (max-width: 700px) {
-  .avatar {
-    opacity: 0.3;
+  .hero h1 {
+    max-width: none;
+  }
+  .blob {
+    top: 88px;
+    right: var(--space-md);
+    width: 130px;
+    transform: rotate(6deg);
   }
 }

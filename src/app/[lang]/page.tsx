@@ -19,16 +19,13 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
 
   return (
     <div className={styles.home}>
-      <div aria-hidden="true" className={styles.blob} />
+      <div className={styles.blob}>
+        <div className={styles.photo}>
+          <Image src={avatar} alt={site.author} sizes="(max-width: 700px) 130px, 300px" preload />
+        </div>
+      </div>
       <div aria-hidden="true" className={styles.dotYellow} />
       <div aria-hidden="true" className={styles.dotAccent} />
-      <Image
-        src={avatar}
-        alt=""
-        sizes="(max-width: 700px) 160px, 320px"
-        preload
-        className={styles.avatar}
-      />
 
       <div className={`container ${styles.inner}`}>
         <SiteHeader lang={lang} brand={false} />

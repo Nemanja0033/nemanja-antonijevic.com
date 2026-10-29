@@ -28,6 +28,46 @@
   rotate: 6deg;
 }
 
+/* The dots wander slowly, each along its own loop, so they never move in sync */
+@media (prefers-reduced-motion: no-preference) {
+  .dotYellow {
+    animation: wander-up-right 16s ease-in-out infinite;
+  }
+  .dotAccent {
+    animation: wander-down-left 12s ease-in-out infinite;
+  }
+}
+@keyframes wander-up-right {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  25% {
+    translate: 40px -30px;
+  }
+  50% {
+    translate: 70px -60px;
+  }
+  75% {
+    translate: 25px -45px;
+  }
+}
+@keyframes wander-down-left {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  30% {
+    translate: -35px 25px;
+  }
+  60% {
+    translate: -60px 55px;
+  }
+  80% {
+    translate: -20px 40px;
+  }
+}
+
 /* On load the blob drifts in: fades up, grows a little and settles into its tilt */
 @media (prefers-reduced-motion: no-preference) {
   .blob {

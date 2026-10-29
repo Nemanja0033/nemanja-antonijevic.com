@@ -20,6 +20,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: { default: site.name, template: `%s | ${site.name}` },
   description: site.description,
+  authors: [{ name: site.author, url: site.url }],
   openGraph: { type: "website", siteName: site.name, locale: "en_US" },
 };
 

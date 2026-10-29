@@ -12,45 +12,43 @@ export type PostMeta = {
 
 export type PostSummary = PostMeta & {
   slug: string;
-  cover?: StaticImageData;
+  cover: StaticImageData;
 };
 
-// Posts live in content/blog as <slug>.mdx, with an optional cover image
-// next to them named <slug>.jpg, <slug>.png or <slug>.webp
+// Each post is a folder: content/blog/<slug>/index.mdx + cover.{jpg,png,webp}
 const CONTENT_DIR = path.join(process.cwd(), "content", "blog");
 const COVER_EXTENSIONS = ["jpg", "png", "webp"] as const;
 
-type PostFiles = { slug: string; coverExt?: (typeof COVER_EXTENSIONS)[number] };
+type PostFiles = { slug: string; coverExt: (typeof COVER_EXTENSIONS)[number] };
 
 async function getPostFiles(): Promise<PostFiles[]> {
   "use cache";
   cacheLife("max");
-  const files = new Set(await readdir(CONTENT_DIR));
-  return [...files]
-    .filter((file) => file.endsWith(".mdx"))
-    .map((file) => {
-      const slug = file.slice(0, -".mdx".length);
-      const coverExt = COVER_EXTENSIONS.find((ext) => files.has(`${slug}.${ext}`));
+  const entries = await readdir(CONTENT_DIR, { withFileTypes: true });
+  const folders = entries.filter((entry) => entry.isDirectory());
+
+  return Promise.all(
+    folders.map(async ({ name: slug }) => {
+      const files = await readdir(path.join(CONTENT_DIR, slug));
+      const coverExt = COVER_EXTENSIONS.find((ext) => files.includes(`cover.${ext}`));
+      if (!files.includes("index.mdx") || !coverExt) {
+        throw new Error(
+          `content/blog/${slug}/ must contain index.mdx and cover.jpg, cover.png or cover.webp`,
+        );
+      }
       return { slug, coverExt };
-    });
+    }),
+  );
 }
 
 export async function getPostSlugs(): Promise<string[]> {
   return (await getPostFiles()).map(({ slug }) => slug);
 }
 
-// A static import gives next/image the width, height and blur placeholder.
-// One template covers every extension, so the bundler never sees an empty match.
-async function importCover(slug: string, ext: PostFiles["coverExt"]) {
-  if (!ext) return undefined;
-  const mod = await import(`../../content/blog/${slug}.${ext}`);
-  return mod.default as StaticImageData;
-}
-
 function assertMeta(slug: string, meta: Partial<PostMeta> | undefined): asserts meta is PostMeta {
   if (!meta?.title || !meta.date || Number.isNaN(Date.parse(meta.date))) {
     throw new Error(
-      `content/blog/${slug}.mdx must export \`meta\` with a \`title\` and an ISO \`date\``,
+      `content/blog/${slug}/index.mdx must export \`meta\` with a \`title\` and an ISO \`date\``,
     );
   }
 }
@@ -59,13 +57,15 @@ export async function getPost(slug: string) {
   const file = (await getPostFiles()).find((post) => post.slug === slug);
   if (!file) notFound();
 
-  const [mod, cover] = await Promise.all([
-    import(`../../content/blog/${slug}.mdx`),
-    importCover(slug, file.coverExt),
+  // Static imports: the bundler compiles every post and cover at build time,
+  // and the cover comes with width, height and a blur placeholder for next/image
+  const [mod, coverMod] = await Promise.all([
+    import(`../../content/blog/${slug}/index.mdx`),
+    import(`../../content/blog/${slug}/cover.${file.coverExt}`),
   ]);
   assertMeta(slug, mod.meta);
 
-  return { Content: mod.default, meta: mod.meta, cover };
+  return { Content: mod.default, meta: mod.meta, cover: coverMod.default as StaticImageData };
 }
 
 export async function getAllPosts(): Promise<PostSummary[]> {

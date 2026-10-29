@@ -20,15 +20,13 @@ export default async function BlogPage() {
         {posts.map((post) => (
           <li key={post.slug}>
             <Link href={`/blog/${post.slug}`} className={styles.card}>
-              {post.cover && (
-                <Image
-                  src={post.cover}
-                  alt=""
-                  placeholder="blur"
-                  sizes="(max-width: 40rem) 100vw, 12rem"
-                  className={styles.cover}
-                />
-              )}
+              <Image
+                src={post.cover}
+                alt=""
+                placeholder="blur"
+                sizes="(max-width: 40rem) 100vw, 12rem"
+                className={styles.cover}
+              />
               <div className={styles.body}>
                 <h2>{post.title}</h2>
                 <time dateTime={post.date}>{formatDate(post.date)}</time>

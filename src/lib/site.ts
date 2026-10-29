@@ -2,6 +2,7 @@
 export const site = {
   name: "Personal Website",
   description: "Personal website and blog",
+  author: "Nemanja Antonijević",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
   locale: "en-US",
 };

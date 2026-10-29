@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { getPost, getPostSlugs } from "@/lib/posts";
-import { formatDate } from "@/lib/site";
+import { formatDate, site } from "@/lib/site";
 import styles from "./post.module.css";
 
 export async function generateStaticParams() {
@@ -36,6 +36,20 @@ export default async function BlogPostPage({
 }: PageProps<"/blog/[slug]">) {
   const { slug } = await params;
   const { Content, meta, cover } = await getPost(slug);
+  const url = `${site.url}/blog/${slug}`;
+
+  // Structured data for search engines (https://schema.org/BlogPosting)
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: meta.title,
+    description: meta.description,
+    datePublished: meta.date,
+    author: { "@type": "Person", name: site.author, url: site.url },
+    image: `${url}/opengraph-image`,
+    url,
+    mainEntityOfPage: url,
+  };
 
   return (
     <article className={styles.post}>
@@ -43,17 +57,20 @@ export default async function BlogPostPage({
         <h1>{meta.title}</h1>
         <time dateTime={meta.date}>{formatDate(meta.date)}</time>
       </header>
-      {cover && (
-        <Image
-          src={cover}
-          alt=""
-          placeholder="blur"
-          sizes="(max-width: 70ch) 100vw, 70ch"
-          preload
-          className={styles.cover}
-        />
-      )}
+      <Image
+        src={cover}
+        alt=""
+        placeholder="blur"
+        sizes="(max-width: 70ch) 100vw, 70ch"
+        preload
+        className={styles.cover}
+      />
       <Content />
-    </article>
+      <script
+        type="application/ld+json"
+        // Escape "<" so post content can never close the script tag
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
+      />
+      </article>
   );
 }

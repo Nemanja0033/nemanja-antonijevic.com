@@ -29,10 +29,13 @@ export const meta = {
   title: "Post title",
   description: "Optional summary for the list, SEO and social cards.",
   date: "2026-10-29",
+  tags: ["nextjs", "css"], // optional; lowercase letters, digits and dashes
 };
 
 Post body. The title is rendered from `meta`, so start with `##` headings.
 ```
+
+Each tag gets its own page at `/blog/tags/<tag>`, generated at build time. Lists show 10 posts per page (`/blog/page/2`, `/blog/tags/<tag>/page/2`, …), also generated at build time. A post folder can't be named `tags` or `page`.
 
 The cover is shown in the post list and at the top of the post, optimized by `next/image`. The build fails with a clear error if a post folder is missing `index.mdx` or a cover.
 

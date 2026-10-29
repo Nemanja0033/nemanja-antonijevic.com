@@ -7,6 +7,7 @@ export type PostMeta = {
   title: string;
   description?: string;
   date: string; // ISO date, e.g. "2026-10-08"
+  tags: string[]; // URL-safe, e.g. ["nextjs", "css"]; optional in index.mdx
 };
 
 export type PostSummary = PostMeta & {
@@ -17,6 +18,9 @@ export type PostSummary = PostMeta & {
 // Each post is a folder: content/blog/<slug>/index.mdx + cover.{jpg,png,webp}
 const CONTENT_DIR = path.join(process.cwd(), "content", "blog");
 const COVER_EXTENSIONS = ["jpg", "png", "webp"] as const;
+// Folder names that would collide with static routes under /blog
+const RESERVED_SLUGS = ["tags", "page"];
+const TAG_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 
 type PostFiles = { slug: string; coverExt: (typeof COVER_EXTENSIONS)[number] };
 
@@ -26,6 +30,9 @@ async function getPostFiles(): Promise<PostFiles[]> {
 
   return Promise.all(
     folders.map(async ({ name: slug }) => {
+      if (RESERVED_SLUGS.includes(slug)) {
+        throw new Error(`content/blog/${slug}/ uses a reserved name: ${RESERVED_SLUGS.join(", ")}`);
+      }
       const files = await readdir(path.join(CONTENT_DIR, slug));
       const coverExt = COVER_EXTENSIONS.find((ext) => files.includes(`cover.${ext}`));
       if (!files.includes("index.mdx") || !coverExt) {
@@ -42,12 +49,20 @@ export async function getPostSlugs(): Promise<string[]> {
   return (await getPostFiles()).map(({ slug }) => slug);
 }
 
-function assertMeta(slug: string, meta: Partial<PostMeta> | undefined): asserts meta is PostMeta {
+function parseMeta(slug: string, meta: Partial<PostMeta> | undefined): PostMeta {
   if (!meta?.title || !meta.date || Number.isNaN(Date.parse(meta.date))) {
     throw new Error(
       `content/blog/${slug}/index.mdx must export \`meta\` with a \`title\` and an ISO \`date\``,
     );
   }
+  const tags = meta.tags ?? [];
+  const invalid = tags.filter((tag) => !TAG_PATTERN.test(tag));
+  if (invalid.length) {
+    throw new Error(
+      `content/blog/${slug}/index.mdx has invalid tags (${invalid.join(", ")}); use lowercase letters, digits and dashes`,
+    );
+  }
+  return { ...meta, tags } as PostMeta;
 }
 
 export async function getPost(slug: string) {
@@ -60,9 +75,12 @@ export async function getPost(slug: string) {
     import(`../../content/blog/${slug}/index.mdx`),
     import(`../../content/blog/${slug}/cover.${file.coverExt}`),
   ]);
-  assertMeta(slug, mod.meta);
 
-  return { Content: mod.default, meta: mod.meta, cover: coverMod.default as StaticImageData };
+  return {
+    Content: mod.default,
+    meta: parseMeta(slug, mod.meta),
+    cover: coverMod.default as StaticImageData,
+  };
 }
 
 export async function getAllPosts(): Promise<PostSummary[]> {
@@ -74,4 +92,34 @@ export async function getAllPosts(): Promise<PostSummary[]> {
     }),
   );
   return posts.sort((a, b) => b.date.localeCompare(a.date));
+}
+
+// Every tag with its post count, most used first
+export async function getAllTags(): Promise<{ tag: string; count: number }[]> {
+  const counts = new Map<string, number>();
+  for (const post of await getAllPosts()) {
+    for (const tag of post.tags) counts.set(tag, (counts.get(tag) ?? 0) + 1);
+  }
+  return [...counts]
+    .map(([tag, count]) => ({ tag, count }))
+    .sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag));
+}
+
+export async function getPostsByTag(tag: string): Promise<PostSummary[]> {
+  return (await getAllPosts()).filter((post) => post.tags.includes(tag));
+}
+
+export const POSTS_PER_PAGE = 10;
+
+// One page of a post list; page numbers start at 1
+export function paginate(posts: PostSummary[], page: number) {
+  const totalPages = Math.max(1, Math.ceil(posts.length / POSTS_PER_PAGE));
+  const start = (page - 1) * POSTS_PER_PAGE;
+  return { posts: posts.slice(start, start + POSTS_PER_PAGE), page, totalPages };
+}
+
+// Pages 2..N for generateStaticParams; page 1 lives at the list's own URL
+export function extraPageNumbers(posts: PostSummary[]): string[] {
+  const { totalPages } = paginate(posts, 1);
+  return Array.from({ length: totalPages - 1 }, (_, i) => String(i + 2));
 }

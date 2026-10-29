@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { getPost, getPostSlugs } from "@/lib/posts";
 import { formatDate, site } from "@/lib/site";
+import { TagList } from "@/components/blog/tag-list";
 import styles from "./post.module.css";
 
 // Only slugs from generateStaticParams exist; anything else is a 404
@@ -29,6 +30,7 @@ export async function generateMetadata({
       title: meta.title,
       description: meta.description,
       publishedTime: meta.date,
+      tags: meta.tags,
     },
     twitter: { card: "summary_large_image" },
   };
@@ -48,6 +50,7 @@ export default async function BlogPostPage({
     headline: meta.title,
     description: meta.description,
     datePublished: meta.date,
+    keywords: meta.tags,
     author: { "@type": "Person", name: site.author, url: site.url },
     image: `${url}/opengraph-image`,
     url,
@@ -59,6 +62,7 @@ export default async function BlogPostPage({
       <header className={styles.header}>
         <h1>{meta.title}</h1>
         <time dateTime={meta.date}>{formatDate(meta.date)}</time>
+        <TagList tags={meta.tags} />
       </header>
       <Image
         src={cover}

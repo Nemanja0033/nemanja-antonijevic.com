@@ -77,6 +77,68 @@
   line-height: 1.6;
 }
 
+/* Tag links (TagList), also shown in the post header */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin: 0 0 var(--space-lg);
+  padding: 0;
+  list-style: none;
+}
+.tags .tag {
+  display: inline-block;
+  padding: 0.2em 0.75em;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--color-muted);
+  text-decoration: none;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  transition:
+    color 150ms ease,
+    border-color 150ms ease;
+}
+.tags .tag:hover,
+.tags .tag[aria-current="page"] {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+.tags .tag[aria-current="page"] {
+  background: color-mix(in srgb, var(--color-primary) 10%, transparent);
+}
+
+/* "All posts" link above a tag page title */
+.back {
+  margin: 0 0 var(--space-sm);
+  font-size: 0.875rem;
+}
+.back a {
+  color: var(--color-muted);
+  text-decoration: none;
+}
+.back a:hover {
+  color: var(--color-primary);
+}
+
+/* "← Newer posts · Page 2 of 5 · Older posts →" below the list */
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-md);
+  margin-top: var(--space-lg);
+  font-size: 0.875rem;
+  color: var(--color-muted);
+}
+.pagination a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+.pagination a:hover {
+  text-decoration: underline;
+}
+
 @media (max-width: 40rem) {
   .blog h1 {
     font-size: 2.25rem;

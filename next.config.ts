@@ -2,8 +2,6 @@ import type { NextConfig } from "next";
 import createMDX from "@next/mdx";
 
 const nextConfig: NextConfig = {
-  cacheComponents: true,
-  partialPrefetching: true,
 };
 
 // Compiles .mdx imports (posts live in content/, not as app/ routes)

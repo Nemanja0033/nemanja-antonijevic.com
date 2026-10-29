@@ -6,6 +6,9 @@ export const alt = site.name;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
+// Only slugs from generateStaticParams exist; anything else is a 404
+export const dynamicParams = false;
+
 export async function generateStaticParams() {
   return (await getPostSlugs()).map((slug) => ({ slug }));
 }

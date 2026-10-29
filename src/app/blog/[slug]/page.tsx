@@ -4,6 +4,9 @@ import { getPost, getPostSlugs } from "@/lib/posts";
 import { formatDate, site } from "@/lib/site";
 import styles from "./post.module.css";
 
+// Only slugs from generateStaticParams exist; anything else is a 404
+export const dynamicParams = false;
+
 export async function generateStaticParams() {
   return (await getPostSlugs()).map((slug) => ({ slug }));
 }

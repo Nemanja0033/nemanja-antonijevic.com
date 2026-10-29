@@ -1,7 +1,6 @@
 import { readdir } from "node:fs/promises";
 import path from "node:path";
 import type { StaticImageData } from "next/image";
-import { cacheLife } from "next/cache";
 import { notFound } from "next/navigation";
 
 export type PostMeta = {
@@ -22,8 +21,6 @@ const COVER_EXTENSIONS = ["jpg", "png", "webp"] as const;
 type PostFiles = { slug: string; coverExt: (typeof COVER_EXTENSIONS)[number] };
 
 async function getPostFiles(): Promise<PostFiles[]> {
-  "use cache";
-  cacheLife("max");
   const entries = await readdir(CONTENT_DIR, { withFileTypes: true });
   const folders = entries.filter((entry) => entry.isDirectory());
 
@@ -69,8 +66,6 @@ export async function getPost(slug: string) {
 }
 
 export async function getAllPosts(): Promise<PostSummary[]> {
-  "use cache";
-  cacheLife("max");
   const slugs = await getPostSlugs();
   const posts = await Promise.all(
     slugs.map(async (slug) => {

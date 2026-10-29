@@ -3,8 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { site } from "@/lib/site";
 import "./globals.css";
 
-// Content only changes on rebuild, so every route must be fully prerendered
-export const ensureStatic = "navigation";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

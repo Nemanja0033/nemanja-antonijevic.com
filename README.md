@@ -27,6 +27,7 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 ```bash
 ./dev.sh new     # new post, step by step: languages, titles, slug, date, tags, cover
 ./dev.sh posts   # every post with its date and languages
+./dev.sh version # bump patch/minor/major, add a CHANGELOG.md entry; the footer shows it
 ./dev.sh dev     # dev server on http://localhost:3000
 ./dev.sh check   # lint + TypeScript + production build
 ```

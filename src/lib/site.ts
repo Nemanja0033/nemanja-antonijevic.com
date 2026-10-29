@@ -1,9 +1,12 @@
+import { version } from "../../package.json";
+
 // Site-wide settings shared by the layout, sitemap, robots and Open Graph images.
 // Text that changes per language lives in src/i18n/dictionaries
 export const site = {
   name: "Nemanja Antonijević",
   author: "Nemanja Antonijević",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+  version, // from package.json, bumped with ./dev.sh version
   // Contact bubbles under the home page photo. TODO: replace these placeholders
   contact: {
     linkedin: "https://www.linkedin.com/in/your-profile",

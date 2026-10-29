@@ -249,6 +249,56 @@ cmd_new() {
   done
 }
 
+# New "## v<version> – <date>" entry at the top of CHANGELOG.md, listing the commit
+# messages since CHANGELOG.md last changed (i.e. since the previous release commit)
+write_changelog() {
+  local version="$1" since range entries
+  since="$(git log -1 --format=%H -- CHANGELOG.md 2>/dev/null || true)"
+  range="${since:+$since..}HEAD"
+  entries="$(git log --reverse --no-merges --format='- %s' "$range")"
+  [[ -n "$entries" ]] || entries="- (no changes since the previous version)"
+
+  node -e '
+    const fs = require("fs");
+    const [version, date, entries] = process.argv.slice(1);
+    const file = "CHANGELOG.md";
+    const text = fs.existsSync(file) ? fs.readFileSync(file, "utf8") : "# Changelog\n\n";
+    const entry = `## v${version} – ${date}\n\n${entries}\n\n`;
+    const at = text.indexOf("\n## ");
+    fs.writeFileSync(file, at === -1 ? text.trimEnd() + "\n\n" + entry : text.slice(0, at + 1) + entry + text.slice(at + 1));
+  ' "$version" "$(date +%F)" "$entries"
+}
+
+# Bump the version in package.json (+ lock file) and add a CHANGELOG.md entry;
+# the footer shows the new version after a build
+cmd_version() {
+  local current type="${1:-}"
+  current="$(node -p 'require("./package.json").version')"
+
+  if [[ -z "$type" ]]; then
+    # Show what each choice would become: 0.1.0 → patch 0.1.1 · minor 0.2.0 · major 1.0.0
+    local preview
+    preview="$(node -e '
+      const [ma, mi, pa] = process.argv[1].split(".").map(Number);
+      console.log(`patch → ${ma}.${mi}.${pa + 1}   (ispravke)\nminor → ${ma}.${mi + 1}.0   (nove mogućnosti)\nmajor → ${ma + 1}.0.0   (velike promene)`);
+    ' "$current")"
+    bold "Trenutna verzija: $current"
+    echo "$preview"
+    type="$(ask "Tip" "patch")"
+  fi
+
+  [[ "$type" =~ ^(patch|minor|major)$ ]] || fail "Tip mora biti patch, minor ili major."
+  npm version "$type" --no-git-tag-version >/dev/null
+  local next
+  next="$(node -p 'require("./package.json").version')"
+  write_changelog "$next"
+  bold "Verzija: $current → $next"
+  echo "Izmenjeni su package.json, package-lock.json i CHANGELOG.md (proveri i doteraj unos)."
+  echo "Footer prikazuje v$next posle sledećeg build-a."
+  echo "Commit i tag su na tebi, npr.:"
+  echo "  git commit -am \"Release v$next\" && git tag v$next"
+}
+
 # Every post with its languages and date
 cmd_posts() {
   local dir slug langs date
@@ -276,6 +326,9 @@ Upotreba: ./dev.sh <komanda>
 
   new     Novi blog zapis, korak po korak (jezici, naslov, slug, datum, tagovi, cover)
   posts   Lista zapisa sa datumom i jezicima
+  version [patch|minor|major]
+          Podigni verziju (bez argumenta pita), dopiši CHANGELOG.md;
+          verzija se prikazuje u footeru
   dev     Razvojni server sa osvežavanjem (http://localhost:3000)
   build   Produkcioni build
   start   Build pa produkcioni server
@@ -288,6 +341,7 @@ EOF
 case "${1:-help}" in
   new) cmd_new ;;
   posts) cmd_posts ;;
+  version) cmd_version "${2:-}" ;;
   dev) npm run dev ;;
   build) npx next build ;;
   start) npx next build && npx next start ;;

@@ -20,6 +20,24 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Writing posts
+
+Posts live in `content/blog/` as `<slug>.mdx` and must export `meta`:
+
+```mdx
+export const meta = {
+  title: "Post title",
+  description: "Optional summary for the list, SEO and social cards.",
+  date: "2026-10-29",
+};
+
+Post body. The title is rendered from `meta`, so start with `##` headings.
+```
+
+To add a cover image, put `<slug>.jpg`, `<slug>.png` or `<slug>.webp` next to the post. It is shown in the post list and at the top of the post, optimized by `next/image`.
+
+Every page, the sitemap, `robots.txt` and the Open Graph images are prerendered at build time, so new content goes live with a rebuild. Set `NEXT_PUBLIC_SITE_URL` (see `.env.example`) to the production URL before building.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

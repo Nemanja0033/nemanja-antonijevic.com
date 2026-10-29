@@ -1,3 +1,13 @@
+import Link from "next/link";
+
 export default function NotFound() {
-  return <main />;
+  return (
+    <main>
+      <h1>Page not found</h1>
+      <p>
+        The page you are looking for does not exist. <Link href="/blog">Read the blog</Link>{" "}
+        instead.
+      </p>
+    </main>
+  );
 }

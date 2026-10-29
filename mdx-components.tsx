@@ -2,16 +2,29 @@ import type { MDXComponents } from "mdx/types";
 import Link from "next/link";
 
 const components: MDXComponents = {
-  a: ({ href = "", children, ...props }) =>
-    href.startsWith("/") || href.startsWith("#") ? (
-      <Link href={href} {...props}>
-        {children}
-      </Link>
-    ) : (
-      <a href={href} target="_blank" rel="noopener noreferrer" {...props}>
+  a: ({ href = "", children, ...props }) => {
+    if (href.startsWith("/") || href.startsWith("#")) {
+      return (
+        <Link href={href} {...props}>
+          {children}
+        </Link>
+      );
+    }
+    // Only web links open in a new tab; mailto:, tel: etc. keep default behavior
+    const external = /^https?:\/\//.test(href);
+    return (
+      <a
+        href={href}
+        {...(external && { target: "_blank", rel: "noopener noreferrer" })}
+        {...props}
+      >
         {children}
       </a>
-    ),
+    );
+  },
+  // Inline images have unknown dimensions, so they stay plain <img> but load lazily
+  // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
+  img: (props) => <img loading="lazy" decoding="async" {...props} />,
 };
 
 export function useMDXComponents(): MDXComponents {

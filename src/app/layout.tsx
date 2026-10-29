@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { site } from "@/lib/site";
 import "./globals.css";
+
+// Content only changes on rebuild, so every route must be fully prerendered
+export const ensureStatic = "navigation";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,8 +17,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: { default: "Personal Website", template: "%s | Personal Website" },
-  description: "Personal website and blog",
+  metadataBase: new URL(site.url),
+  title: { default: site.name, template: `%s | ${site.name}` },
+  description: site.description,
+  openGraph: { type: "website", siteName: site.name, locale: "en_US" },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

@@ -14,18 +14,69 @@
   position: absolute;
   pointer-events: none;
 }
+/* Photo blob with the contact bubbles under it, on the right of the hero */
+.portrait {
+  position: absolute;
+  z-index: 2; /* above .inner, so the links stay clickable */
+  top: 50%;
+  right: 5%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  width: min(28vw, 300px); /* small enough for the 400px photo to stay sharp */
+  translate: 0 -50%;
+}
+
 /* Blue blob with the photo inside, clipped to the same soft shape */
 .blob {
   --shape: 58% 42% 47% 53% / 46% 55% 45% 54%;
-  position: absolute;
-  top: 50%;
-  right: 5%;
-  width: min(28vw, 300px); /* small enough for the 400px photo to stay sharp */
+  position: relative;
+  width: 100%;
   aspect-ratio: 1;
   border-radius: var(--shape);
   background: var(--color-tint);
-  translate: 0 -50%;
   rotate: 6deg;
+}
+
+/* LinkedIn and e-mail as small bubbles in the same soft shape */
+.contact {
+  display: flex;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.contact a {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  aspect-ratio: 1;
+  border-radius: 46% 54% 52% 48% / 55% 44% 56% 45%;
+  background: var(--color-tint);
+  color: var(--color-primary);
+  transition:
+    scale 150ms ease,
+    background-color 150ms ease,
+    color 150ms ease;
+}
+.contact li:nth-child(2) a {
+  background: var(--color-highlight);
+  color: var(--color-foreground);
+}
+.contact a:hover {
+  scale: 1.08;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+}
+.contact svg {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 /* The dots wander slowly, each along its own loop, so they never move in sync */
@@ -72,6 +123,13 @@
 @media (prefers-reduced-motion: no-preference) {
   .blob {
     animation: blob-in 1.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  /* The contact bubbles follow the photo, one after the other */
+  .contact li {
+    animation: blob-in 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.35s both;
+  }
+  .contact li:nth-child(2) {
+    animation-delay: 0.5s;
   }
 }
 @keyframes blob-in {
@@ -178,10 +236,28 @@
   .hero h1 {
     max-width: none;
   }
-  .blob {
+  /* Contact bubbles stack to the left of the photo, so the group stays short */
+  .portrait {
     top: 88px;
     right: var(--space-md);
-    width: 130px;
+    flex-direction: row-reverse;
+    align-items: flex-end;
+    gap: 0.5rem;
+    width: auto;
     translate: none;
+  }
+  .blob {
+    width: 130px;
+  }
+  .contact {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .contact a {
+    width: 44px;
+  }
+  .contact svg {
+    width: 20px;
+    height: 20px;
   }
 }

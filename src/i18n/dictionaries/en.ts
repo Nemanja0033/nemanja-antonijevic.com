@@ -16,6 +16,8 @@ const en: Dictionary = {
   home: {
     heading: ["Building frontends", "writing deep tech blogs for not\u2011so\u2011regular developers"], // \u2011: hyphens that never break the line
     cta: "Blog →",
+    linkedin: "LinkedIn profile",
+    email: "Send an email",
   },
 
   blog: {

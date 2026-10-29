@@ -14,6 +14,8 @@ const sr = {
   home: {
     heading: ["Razvijam frontend", "pišem detaljne tech artikle za ne baš obične developere"], // joined by an accent "&"
     cta: "Blog →",
+    linkedin: "LinkedIn profil",
+    email: "Pošalji mejl",
   },
 
   blog: {

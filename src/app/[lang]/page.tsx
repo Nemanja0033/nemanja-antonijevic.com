@@ -19,10 +19,35 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
 
   return (
     <div className={styles.home}>
-      <div className={styles.blob}>
-        <div className={styles.photo}>
-          <Image src={avatar} alt={site.author} sizes="(max-width: 700px) 130px, 300px" preload />
+      <div className={styles.portrait}>
+        <div className={styles.blob}>
+          <div className={styles.photo}>
+            <Image src={avatar} alt={site.author} sizes="(max-width: 700px) 130px, 300px" preload />
+          </div>
         </div>
+        <ul className={styles.contact}>
+          <li>
+            <a
+              href={site.contact.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={dict.home.linkedin}
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="3" y="3" width="18" height="18" rx="4" />
+                <path d="M8 11v5M8 8v.01M12 16v-5M16 16v-3a2 2 0 0 0-4 0" />
+              </svg>
+            </a>
+          </li>
+          <li>
+            <a href={`mailto:${site.contact.email}`} aria-label={dict.home.email}>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="3" y="5" width="18" height="14" rx="3" />
+                <path d="m4 7 8 6 8-6" />
+              </svg>
+            </a>
+          </li>
+        </ul>
       </div>
       <div aria-hidden="true" className={styles.dotYellow} />
       <div aria-hidden="true" className={styles.dotAccent} />

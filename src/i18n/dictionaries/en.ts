@@ -9,7 +9,7 @@ const en: Dictionary = {
 
   site: {
     description: "Building frontends & writing deep tech blogs for not-so-regular developers.",
-    footerNote: "No cookies. No trackers.",
+    madeBy: "project by",
     languageSwitch: "Language",
   },
 

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import avatar from "@/assets/avatar.jpg";
+import { SiteFooter } from "@/components/site/site-footer";
 import { SiteHeader } from "@/components/site/site-header";
 import { alternates, getDictionary, localePath, toLocale } from "@/i18n";
 import { site } from "@/lib/site";
@@ -65,14 +66,7 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
           </Link>
         </main>
 
-        <footer className={styles.footer}>
-          {site.links.map(({ label, href }) => (
-            <a key={href} href={href}>
-              {label}
-            </a>
-          ))}
-          <span>© {new Date().getFullYear()}</span>
-        </footer>
+        <SiteFooter lang={lang} />
       </div>
     </div>
   );

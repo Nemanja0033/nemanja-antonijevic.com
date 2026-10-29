@@ -7,7 +7,7 @@ const sr = {
 
   site: {
     description: "Razvijam frontend & pišem detaljne tech artikle za ne baš obične developere.",
-    footerNote: "Bez kolačića. Bez trekera.",
+    madeBy: "razvio", // footer: "© 2026 · razvio <name>"
     languageSwitch: "Jezik",
   },
 

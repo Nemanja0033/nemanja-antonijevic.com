@@ -60,17 +60,14 @@
 }
 
 .footer {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem var(--space-md);
   margin-top: var(--space-xl);
   padding-block: var(--space-md) 2rem;
   font-size: 0.9375rem;
   color: var(--color-muted);
 }
-.footer .note {
-  background: var(--color-highlight);
-  color: var(--color-foreground);
+/* Same weight and color as the text; a thin underline marks it as a link */
+.footer a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
 }

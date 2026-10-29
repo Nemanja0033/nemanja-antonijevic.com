@@ -9,6 +9,4 @@ export const site = {
     linkedin: "https://www.linkedin.com/in/your-profile",
     email: "hello@example.com",
   },
-  // Shown in the home page footer; add { label, href } entries, e.g. GitHub, LinkedIn, e-mail
-  links: [] as { label: string; href: string }[],
 };

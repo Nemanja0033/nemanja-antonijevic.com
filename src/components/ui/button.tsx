@@ -8,8 +8,9 @@ type Props = {
   /** Button text, e.g. `"Blog →"` or `"← newer"`. */
   children: ReactNode;
   /**
-   * Destination. Without it the button renders as an inert `<span aria-disabled>`,
-   * used for steps that don't exist (no newer page on page 1).
+   * Destination. Without it the button renders as an inert, muted `<span>` that
+   * screen readers skip (`aria-hidden`), used for steps that don't exist (no newer
+   * page on page 1). It only keeps the layout steady; it carries no information.
    */
   href?: string;
   /**
@@ -49,7 +50,7 @@ export function Button({ children, href, variant = "primary", size = "md", rel, 
   const classes = cx(styles.button, styles[variant], styles[size], className);
   if (!href) {
     return (
-      <span className={classes} aria-disabled="true">
+      <span className={classes} aria-hidden="true">
         {children}
       </span>
     );

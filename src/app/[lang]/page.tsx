@@ -33,7 +33,7 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
       <div className={`container ${styles.inner}`}>
         <SiteHeader lang={lang} brand={false} />
 
-        <main className={styles.hero}>
+        <main id="main" tabIndex={-1} className={styles.hero}>
           <p className={styles.eyebrow}>{site.author}</p>
           <h1>
             {before} <em>&amp;</em> {after}
@@ -44,7 +44,7 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
             </Button>
             <ul className={styles.contact}>
               <li>
-                <IconBubble href={site.contact.linkedin} label={dict.home.linkedin} external>
+                <IconBubble href={site.contact.linkedin} label={`${dict.home.linkedin} (${dict.site.newTab})`} external>
                   <svg viewBox="0 0 24 24" aria-hidden="true">
                     <rect x="3" y="3" width="18" height="18" rx="4" />
                     <path d="M8 11v5M8 8v.01M12 16v-5M16 16v-3a2 2 0 0 0-4 0" />
@@ -54,7 +54,7 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
               <li>
                 <IconBubble
                   href={`mailto:${site.contact.email}`}
-                  label={dict.home.email}
+                  label={`${dict.home.email} (${dict.site.newTab})`}
                   tone="highlight"
                   external
                 >

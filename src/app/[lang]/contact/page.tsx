@@ -7,5 +7,5 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/contact">)
 }
 
 export default function ContactPage() {
-  return <main />;
+  return <main id="main" tabIndex={-1} />;
 }

@@ -14,7 +14,7 @@ export default async function NotFound() {
   return (
     <div className="container">
       <SiteHeader lang={lang} />
-      <main>
+      <main id="main" tabIndex={-1}>
         <h1>{dict.notFound.title}</h1>
         <p>
           {dict.notFound.text} <Link href={localePath(lang, "/blog")}>{dict.notFound.link}</Link>.

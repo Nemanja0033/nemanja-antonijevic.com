@@ -19,9 +19,12 @@ export default function GlobalNotFound() {
   return (
     <html lang={getDictionary(defaultLocale).htmlLang} className={`${nunito.variable} ${plexMono.variable}`}>
       <body>
+        <a href="#main" className="skip-link">
+          {getDictionary(defaultLocale).site.skipToContent}
+        </a>
         <div className="container">
           <SiteHeader lang={defaultLocale} />
-          <main>
+          <main id="main" tabIndex={-1}>
             <h1>
               {sr.notFound.title} / <span lang={en.htmlLang}>{en.notFound.title}</span>
             </h1>

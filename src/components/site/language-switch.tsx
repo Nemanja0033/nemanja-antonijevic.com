@@ -16,6 +16,11 @@ type Props = {
    * (from `getSitePaths`), so the switch never links to a page that would 404.
    */
   paths: Record<Locale, string[]>;
+  /**
+   * Each language's own name and HTML `lang` code, e.g. `{ name: "Srpski", htmlLang: "sr-Latn" }`.
+   * The name is what screen readers announce instead of spelling out "S R".
+   */
+  languages: Record<Locale, { name: string; htmlLang: string }>;
 };
 
 /**
@@ -31,10 +36,10 @@ type Props = {
  * @example
  * ```tsx
  * // Rendered by SiteHeader, which computes `paths` at build time
- * <LanguageSwitch lang={lang} label={dict.site.languageSwitch} paths={paths} />
+ * <LanguageSwitch lang={lang} label={dict.site.languageSwitch} paths={paths} languages={languages} />
  * ```
  */
-export function LanguageSwitch({ lang, label, paths }: Props) {
+export function LanguageSwitch({ lang, label, paths, languages }: Props) {
   const rest = usePathname().replace(/^\/[^/]+/, "");
 
   return (
@@ -48,6 +53,8 @@ export function LanguageSwitch({ lang, label, paths }: Props) {
               <Link
                 href={localePath(locale, path)}
                 hrefLang={locale}
+                lang={languages[locale].htmlLang}
+                aria-label={languages[locale].name}
                 aria-current={locale === lang ? "true" : undefined}
               >
                 {locale.toUpperCase()}

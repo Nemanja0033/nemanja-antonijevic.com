@@ -77,6 +77,27 @@ a:hover {
   padding-inline: var(--space-md);
 }
 
+/* "Skip to content": hidden until a keyboard user tabs to it, then shown top left */
+.skip-link {
+  position: absolute;
+  z-index: 10;
+  top: var(--space-sm);
+  left: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-pill);
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  font-weight: 800;
+  translate: 0 -200%;
+}
+.skip-link:focus-visible {
+  translate: 0 0;
+}
+/* <main> receives focus from the skip link; no ring around the whole page */
+main:focus {
+  outline: none;
+}
+
 /* Visually hidden but read by screen readers (used by GFM footnotes) */
 .sr-only {
   position: absolute;

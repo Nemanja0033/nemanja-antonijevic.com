@@ -9,7 +9,9 @@ export default async function BlogLayout({ children, params }: LayoutProps<"/[la
   return (
     <div className="container">
       <SiteHeader lang={lang} />
-      <main>{children}</main>
+      <main id="main" tabIndex={-1}>
+        {children}
+      </main>
       <SiteFooter lang={lang} />
     </div>
   );

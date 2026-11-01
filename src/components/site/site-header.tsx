@@ -36,6 +36,12 @@ export async function SiteHeader({ lang, brand = true }: Props) {
     locales.map(async (locale) => [locale, (await getSitePaths(locale)).map((p) => p.path)]),
   );
   const paths = Object.fromEntries(entries) as Record<Locale, string[]>;
+  const languages = Object.fromEntries(
+    locales.map((locale) => {
+      const dict = getDictionary(locale);
+      return [locale, { name: dict.languageName, htmlLang: dict.htmlLang }];
+    }),
+  ) as Record<Locale, { name: string; htmlLang: string }>;
 
   return (
     <header className={styles.header}>
@@ -44,7 +50,12 @@ export async function SiteHeader({ lang, brand = true }: Props) {
           {site.author}
         </Link>
       )}
-      <LanguageSwitch lang={lang} label={getDictionary(lang).site.languageSwitch} paths={paths} />
+      <LanguageSwitch
+        lang={lang}
+        label={getDictionary(lang).site.languageSwitch}
+        paths={paths}
+        languages={languages}
+      />
     </header>
   );
 }

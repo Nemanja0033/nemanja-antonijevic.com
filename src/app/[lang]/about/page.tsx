@@ -7,5 +7,5 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/about">): 
 }
 
 export default function AboutPage() {
-  return <main />;
+  return <main id="main" tabIndex={-1} />;
 }

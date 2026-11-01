@@ -22,11 +22,14 @@ type Props = {
  * ```
  */
 export function SiteFooter({ lang }: Props) {
+  const dict = getDictionary(lang).site;
+
   return (
     <footer className={styles.footer}>
-      © {new Date().getFullYear()} · {getDictionary(lang).site.madeBy}{" "}
+      © {new Date().getFullYear()} · {dict.madeBy && `${dict.madeBy} `}
       <a href={site.contact.linkedin} target="_blank" rel="noopener noreferrer">
         {site.author}
+        <span className="sr-only"> ({dict.newTab})</span>
       </a>{" "}
       · v{site.version}
     </footer>

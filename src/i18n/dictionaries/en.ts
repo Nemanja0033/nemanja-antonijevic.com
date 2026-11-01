@@ -11,6 +11,8 @@ const en: Dictionary = {
     description: "Building software & writing deep tech blogs for not-so-regular developers.",
     madeBy: "project by",
     languageSwitch: "Language",
+    skipToContent: "Skip to content",
+    newTab: "opens in a new tab",
   },
 
   home: {
@@ -42,6 +44,7 @@ const en: Dictionary = {
     back: "← blog",
     readingTime: (minutes) => `${minutes} min read`,
     onThisPage: "on this page",
+    table: "Table",
     tags: "tags",
     adjacentLabel: "More posts",
     older: "← older",

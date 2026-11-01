@@ -26,6 +26,7 @@
 
 /* Tag chip: small and yellow, for tags in cards and the post header */
 .tag {
+  min-height: 24px; /* WCAG 2.2 minimum target size */
   padding: 0 0.75rem;
   background: var(--color-highlight);
   font-size: 0.8125rem;

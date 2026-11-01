@@ -9,6 +9,8 @@ const sr = {
     description: "Razvijam softver & pišem detaljne tech artikle za ne baš obične developere.",
     madeBy: "", // footer: "© 2026 · razvio <name>"
     languageSwitch: "Jezik",
+    skipToContent: "Preskoči na sadržaj",
+    newTab: "otvara se u novom tabu", // read by screen readers after links that open a new tab
   },
 
   home: {
@@ -40,6 +42,7 @@ const sr = {
     back: "← blog",
     readingTime: (minutes: number) => `${minutes} min čitanja`,
     onThisPage: "na ovoj strani",
+    table: "Tabela", // name of the scrollable table region in posts
     tags: "oznake",
     adjacentLabel: "Susedni zapisi",
     older: "← starije",

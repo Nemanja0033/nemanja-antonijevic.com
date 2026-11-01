@@ -36,7 +36,13 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[la
       lang={getDictionary(lang).htmlLang}
       className={`${nunito.variable} ${plexMono.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        {/* First stop for keyboard users: jumps past the header to the page's <main id="main"> */}
+        <a href="#main" className="skip-link">
+          {getDictionary(lang).site.skipToContent}
+        </a>
+        {children}
+      </body>
     </html>
   );
 }

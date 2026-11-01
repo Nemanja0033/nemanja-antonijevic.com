@@ -1,0 +1,97 @@
+/* Decorative floating bubble, built on the tokens in globals.css.
+   Size, color, opacity and drift duration come in as custom properties from the component */
+.bubble {
+  display: grid;
+  place-items: center;
+  width: var(--bubble-size, 48px);
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: var(--bubble-color);
+  opacity: var(--bubble-opacity, 0.6);
+}
+.circle {
+  border-radius: 50%;
+}
+.blob {
+  border-radius: 58% 42% 47% 53% / 46% 55% 45% 54%;
+}
+
+/* Palette colors; a custom `color` prop overrides them through --bubble-color */
+.primary {
+  --bubble-color: var(--color-primary);
+  color: var(--color-on-primary);
+}
+.tint {
+  --bubble-color: var(--color-tint);
+  color: var(--color-primary);
+}
+.highlight {
+  --bubble-color: var(--color-highlight);
+  color: var(--color-foreground);
+}
+
+/* Content (an icon, an <svg> or an <img>) fills the middle of the bubble */
+.bubble > :is(svg, img) {
+  width: 55%;
+  height: 55%;
+  object-fit: contain;
+}
+.bubble > svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Drift: a slow loop in one direction and back; never for people who prefer less motion */
+@media (prefers-reduced-motion: no-preference) {
+  .up-right {
+    animation: drift-up-right var(--bubble-duration, 16s) ease-in-out infinite;
+  }
+  .down-left {
+    animation: drift-down-left var(--bubble-duration, 12s) ease-in-out infinite;
+  }
+  .bob {
+    animation: bob var(--bubble-duration, 6s) ease-in-out infinite;
+  }
+}
+@keyframes drift-up-right {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  25% {
+    translate: 40px -30px;
+  }
+  50% {
+    translate: 70px -60px;
+  }
+  75% {
+    translate: 25px -45px;
+  }
+}
+@keyframes drift-down-left {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  30% {
+    translate: -35px 25px;
+  }
+  60% {
+    translate: -60px 55px;
+  }
+  80% {
+    translate: -20px 40px;
+  }
+}
+@keyframes bob {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -12px;
+  }
+}

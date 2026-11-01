@@ -4,7 +4,7 @@ import avatar from "@/assets/avatar.jpg";
 import { LatestPosts } from "@/components/blog/latest-posts";
 import { SiteFooter } from "@/components/site/site-footer";
 import { SiteHeader } from "@/components/site/site-header";
-import { Button, IconBubble } from "@/components/ui";
+import { Button, FloatingBubble, IconBubble } from "@/components/ui";
 import { alternates, getDictionary, localePath, toLocale } from "@/i18n";
 import { getAllPosts } from "@/lib/posts";
 import { site } from "@/lib/site";
@@ -18,7 +18,6 @@ export async function generateMetadata({ params }: PageProps<"/[lang]">): Promis
 export default async function HomePage({ params }: PageProps<"/[lang]">) {
   const lang = toLocale((await params).lang);
   const dict = getDictionary(lang);
-  const [before, after] = dict.home.heading;
 
   return (
     <div className={styles.home}>
@@ -36,12 +35,23 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
               </div>
             </div>
           </div>
-          <div aria-hidden="true" className={styles.dotYellow} />
-          <div aria-hidden="true" className={styles.dotAccent} />
+          <FloatingBubble
+            tone="highlight"
+            size="clamp(36px, 5vw, 64px)"
+            drift="up-right"
+            className={styles.dotYellow}
+          />
+          <FloatingBubble
+            tone="primary"
+            size="clamp(20px, 2.6vw, 34px)"
+            drift="down-left"
+            className={styles.dotAccent}
+          />
           <div className={`container ${styles.hero}`}>
             <p className={styles.eyebrow}>{site.author}</p>
             <h1>
-              {before} <em>&amp;</em> {after}
+              {dict.home.heading.lead} <em>{dict.home.heading.highlight}</em>{" "}
+              {dict.home.heading.tail}
             </h1>
             <div className={styles.actions}>
               <Button href={localePath(lang, "/blog")} size="lg" className={styles.cta}>

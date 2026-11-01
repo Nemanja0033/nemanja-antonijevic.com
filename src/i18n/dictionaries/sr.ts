@@ -6,7 +6,7 @@ const sr = {
   languageName: "Srpski",
 
   site: {
-    description: "Razvijam softver & pišem detaljne tech artikle za ne baš obične developere.",
+    description: "Frontend entuzijasta koji piše detaljne tech artikle za ne baš obične developere.",
     madeBy: "", // footer: "© 2026 · razvio <name>"
     languageSwitch: "Jezik",
     skipToContent: "Preskoči na sadržaj",
@@ -14,7 +14,12 @@ const sr = {
   },
 
   home: {
-    heading: ["Razvijam softver", "pišem detaljne tech artikle za ne baš obične developere"], // joined by an accent "&"
+    // "<lead> <highlight> <tail>", the highlight in the accent color
+    heading: {
+      lead: "Frontend entuzijasta koji piše detaljne tech artikle za",
+      highlight: "ne baš obične",
+      tail: "developere",
+    },
     cta: "Blog →",
     linkedin: "LinkedIn profil",
     email: "Pošalji mejl",

@@ -18,7 +18,7 @@
   min-height: calc(100svh - 5.5rem);
 }
 
-/* Decorative dots behind the content */
+/* Placement of the two FloatingBubble dots (components/ui/floating-bubble) */
 .dotYellow,
 .dotAccent {
   position: absolute;
@@ -52,46 +52,6 @@
   margin: 0;
   padding: 0;
   list-style: none;
-}
-
-/* The dots wander slowly, each along its own loop, so they never move in sync */
-@media (prefers-reduced-motion: no-preference) {
-  .dotYellow {
-    animation: wander-up-right 16s ease-in-out infinite;
-  }
-  .dotAccent {
-    animation: wander-down-left 12s ease-in-out infinite;
-  }
-}
-@keyframes wander-up-right {
-  0%,
-  100% {
-    translate: 0 0;
-  }
-  25% {
-    translate: 40px -30px;
-  }
-  50% {
-    translate: 70px -60px;
-  }
-  75% {
-    translate: 25px -45px;
-  }
-}
-@keyframes wander-down-left {
-  0%,
-  100% {
-    translate: 0 0;
-  }
-  30% {
-    translate: -35px 25px;
-  }
-  60% {
-    translate: -60px 55px;
-  }
-  80% {
-    translate: -20px 40px;
-  }
 }
 
 /* On load the blob drifts in: fades up, grows a little and settles into its tilt */
@@ -140,18 +100,10 @@
 .dotYellow {
   bottom: 150px;
   left: 7%;
-  width: clamp(36px, 5vw, 64px);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: var(--color-highlight);
 }
 .dotAccent {
   top: 70px;
   left: 46%;
-  width: clamp(20px, 2.6vw, 34px);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: var(--color-primary);
 }
 
 /* Headline, button and contact bubbles, vertically centered in the first screen */
@@ -169,6 +121,11 @@
   font-weight: 800;
   color: var(--color-muted);
 }
+/* The highlighted end of the headline, in the accent color */
+.hero h1 em {
+  font-style: normal;
+  color: var(--color-primary);
+}
 .hero h1 {
   max-width: min(11em, 60vw); /* stays left of the photo blob */
   margin: 0;
@@ -177,9 +134,6 @@
   line-height: 1;
   letter-spacing: -0.03em;
   overflow-wrap: anywhere;
-}
-.hero h1 em {
-  color: var(--color-primary);
 }
 /* "Blog →" and the contact bubbles in one row under the heading */
 .actions {

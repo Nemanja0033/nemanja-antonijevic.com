@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { cx } from "./cx";
+import { cx } from "../cx";
 import styles from "./card.module.css";
 
 /** Props for {@link Card}. */

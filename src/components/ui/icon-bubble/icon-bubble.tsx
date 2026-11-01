@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { cx } from "./cx";
+import { cx } from "../cx";
 import styles from "./icon-bubble.module.css";
 
 /** Props for {@link IconBubble}. */

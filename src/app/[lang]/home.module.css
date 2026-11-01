@@ -14,16 +14,11 @@
   position: absolute;
   pointer-events: none;
 }
-/* Photo blob with the contact bubbles under it, on the right of the hero */
+/* Photo blob on the right of the hero */
 .portrait {
   position: absolute;
-  z-index: 2; /* above .inner, so the links stay clickable */
   top: 50%;
   right: 5%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-md);
   width: min(28vw, 300px); /* small enough for the 400px photo to stay sharp */
   translate: 0 -50%;
 }
@@ -40,7 +35,7 @@
   opacity: 0.85; /* lets the paper show through a little; the load animation ends here */
 }
 
-/* Row of LinkedIn and e-mail bubbles (components/ui/icon-bubble) */
+/* LinkedIn and e-mail bubbles next to the "Blog →" button (components/ui/icon-bubble) */
 .contact {
   display: flex;
   gap: 1rem;
@@ -94,7 +89,7 @@
   .blob {
     animation: blob-in 1.4s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
-  /* The contact bubbles follow the photo, one after the other */
+  /* The contact bubbles drift in after the photo, one after the other */
   .contact li {
     animation: blob-in 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.35s both;
   }
@@ -120,7 +115,8 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transform: rotate(-6deg) scale(1.12);
+  /* translateY moves the face down so the blob's rounded top doesn't cut the head */
+  transform: rotate(-6deg) scale(1.12) translateY(6%);
   filter: grayscale(1) contrast(1.05); /* black and white to match the palette */
 }
 /* Duotone: "screen" turns the photo's blacks into the accent blue, whites stay white */
@@ -181,10 +177,16 @@
 .hero h1 em {
   color: var(--color-primary);
 }
-/* Placement of the "Blog →" Button: left-aligned, slightly tilted like the design */
-.cta {
-  align-self: flex-start;
+/* "Blog →" and the contact bubbles in one row under the heading */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
   margin-top: 2.5rem;
+}
+/* The "Blog →" Button is slightly tilted, like the design */
+.cta {
   rotate: -1.5deg;
 }
 
@@ -193,21 +195,10 @@
   .hero h1 {
     max-width: none;
   }
-  /* Contact bubbles stack to the left of the photo, so the group stays short */
   .portrait {
     top: 88px;
     right: var(--space-md);
-    flex-direction: row-reverse;
-    align-items: flex-end;
-    gap: 0.5rem;
-    width: auto;
-    translate: none;
-  }
-  .blob {
     width: 130px;
-  }
-  .contact {
-    flex-direction: column;
-    gap: 0.5rem;
+    translate: none;
   }
 }

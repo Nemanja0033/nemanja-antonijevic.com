@@ -3,16 +3,48 @@ import type { ReactNode } from "react";
 import { cx } from "./cx";
 import styles from "./button.module.css";
 
+/** Props for {@link Button}. */
 type Props = {
+  /** Button text, e.g. `"Blog →"` or `"← newer"`. */
   children: ReactNode;
-  href?: string; // without it the button is an inert placeholder (a disabled step)
+  /**
+   * Destination. Without it the button renders as an inert `<span aria-disabled>`,
+   * used for steps that don't exist (no newer page on page 1).
+   */
+  href?: string;
+  /**
+   * - `"primary"`: accent background, for the main action (default)
+   * - `"muted"`: grey, for an unavailable step
+   */
   variant?: "primary" | "muted";
+  /**
+   * - `"md"`: compact, e.g. pagination (default)
+   * - `"lg"`: prominent call to action, e.g. "Blog →" on the home page
+   */
   size?: "md" | "lg";
+  /** Link relation, e.g. `"prev"` / `"next"` for pagination. */
   rel?: string;
+  /** Extra classes from the caller, for placement only (alignment, margin, tilt). */
   className?: string;
 };
 
-// Pill-shaped action link; this site has no form buttons, so it always navigates
+/**
+ * Pill-shaped action that navigates to another page.
+ *
+ * @remarks
+ * The site is static and has no forms, so every action is navigation; this renders a
+ * Next.js `<Link>` styled as a button rather than a `<button>`. It exists so the home
+ * page call to action and the pagination steps share one look, hover state and set of
+ * sizes. Placement (tilt, margins) stays with the caller's `className`.
+ *
+ * @example
+ * ```tsx
+ * <Button href={localePath(lang, "/blog")} size="lg">{dict.home.cta}</Button>
+ * <Button href={hasNewer ? href(page - 1) : undefined} variant={hasNewer ? "primary" : "muted"} rel="prev">
+ *   {dict.pagination.newer}
+ * </Button>
+ * ```
+ */
 export function Button({ children, href, variant = "primary", size = "md", rel, className }: Props) {
   const classes = cx(styles.button, styles[variant], styles[size], className);
   if (!href) {

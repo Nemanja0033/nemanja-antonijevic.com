@@ -6,8 +6,30 @@ import type { PostSummary } from "@/lib/posts";
 import { TagList } from "./tag-list";
 import styles from "./blog.module.css";
 
-// Post cards shared by every post list
-export function PostList({ lang, posts }: { lang: Locale; posts: PostSummary[] }) {
+/** Props for {@link PostList}. */
+type Props = {
+  /** Language of the page; picks texts, date format and link prefixes. */
+  lang: Locale;
+  /** Posts to show, already sliced to the current page. */
+  posts: PostSummary[];
+};
+
+/**
+ * Cards for a list of posts: date, reading time, title, description, tags, URL and
+ * cover image.
+ *
+ * @remarks
+ * Shared by every post list through {@link PaginatedPostList}, so a post looks the
+ * same on the blog page and on tag pages. Only the title is a link to the post; tags
+ * inside the card link to their own pages, and links can't be nested. Covers are
+ * imported statically, so `next/image` knows their size and shows a blur placeholder.
+ *
+ * @example
+ * ```tsx
+ * <PostList lang={lang} posts={paginate(posts, page).posts} />
+ * ```
+ */
+export function PostList({ lang, posts }: Props) {
   const dict = getDictionary(lang);
 
   return (

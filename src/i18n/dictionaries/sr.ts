@@ -7,7 +7,7 @@ const sr = {
 
   site: {
     description: "Bavim se razvojem softvera & pišem detaljne tech artikle za ne baš obične developere.",
-    madeBy: "razvio", // footer: "© 2026 · razvio <name>"
+    madeBy: "", // footer: "© 2026 · razvio <name>"
     languageSwitch: "Jezik",
   },
 

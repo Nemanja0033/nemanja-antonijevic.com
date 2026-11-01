@@ -52,7 +52,12 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
                 </IconBubble>
               </li>
               <li>
-                <IconBubble href={`mailto:${site.contact.email}`} label={dict.home.email} tone="highlight">
+                <IconBubble
+                  href={`mailto:${site.contact.email}`}
+                  label={dict.home.email}
+                  tone="highlight"
+                  external
+                >
                   <svg viewBox="0 0 24 24" aria-hidden="true">
                     <rect x="3" y="5" width="18" height="14" rx="3" />
                     <path d="m4 7 8 6 8-6" />

@@ -20,6 +20,8 @@ const en: Dictionary = {
     cta: "Blog →",
     linkedin: "LinkedIn profile",
     email: "Send an email",
+    latestTitle: "Latest posts",
+    allPosts: "All posts →",
   },
 
   blog: {

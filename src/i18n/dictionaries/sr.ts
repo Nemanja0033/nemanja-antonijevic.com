@@ -18,6 +18,8 @@ const sr = {
     cta: "Blog →",
     linkedin: "LinkedIn profil",
     email: "Pošalji mejl",
+    latestTitle: "Najnoviji zapisi",
+    allPosts: "Svi zapisi →",
   },
 
   blog: {

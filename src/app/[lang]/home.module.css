@@ -1,11 +1,21 @@
-/* Home page hero, built on the tokens in globals.css */
+/* Home page, built on the tokens in globals.css */
 
+/* overflow: the photo blob and the dots may stick out past the screen edge */
 .home {
+  overflow: hidden;
+}
+/* Header row, above the decorative dots */
+.top {
+  position: relative;
+  z-index: 1;
+}
+
+/* First screen: everything below the header, at least the rest of the viewport.
+   The photo and the dots are positioned against this box */
+.intro {
   position: relative;
   display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  overflow: hidden;
+  min-height: calc(100svh - 5.5rem);
 }
 
 /* Decorative dots behind the content */
@@ -136,7 +146,7 @@
   background: var(--color-highlight);
 }
 .dotAccent {
-  top: 150px;
+  top: 70px;
   left: 46%;
   width: clamp(20px, 2.6vw, 34px);
   aspect-ratio: 1;
@@ -144,20 +154,14 @@
   background: var(--color-primary);
 }
 
-.inner {
+/* Headline, button and contact bubbles, vertically centered in the first screen */
+.hero {
   position: relative;
   z-index: 1;
   display: flex;
-  flex: 1;
-  flex-direction: column;
-}
-
-.hero {
-  display: flex;
-  flex: 1;
   flex-direction: column;
   justify-content: center;
-  padding-block: 6rem var(--space-lg);
+  padding-block: var(--space-xl);
 }
 .eyebrow {
   margin: 0 0 1.25rem;
@@ -195,8 +199,13 @@
   .hero h1 {
     max-width: none;
   }
+  /* Leave room above the headline for the photo, which sits top right */
+  .hero {
+    justify-content: flex-start;
+    padding-top: 11rem;
+  }
   .portrait {
-    top: 88px;
+    top: 0.5rem;
     right: var(--space-md);
     width: 130px;
     translate: none;

@@ -1,0 +1,74 @@
+export const meta = {
+  title: "AI-driven development: how I built this blog with an agent",
+  description: "What changes when an AI agent writes the code and you become the editor: the loop, the traps and what is still your job.",
+  date: "2026-11-01",
+  tags: ["ai", "workflow", "nextjs"],
+};
+
+This blog was built in a conversation. I didn't type the components by hand. I told an AI agent what I wanted, looked at what it did and asked for changes. After a few days of working like this, I think the biggest shift is in what "working on a project" means: I type less and decide a lot more.
+
+## What AI-driven development actually is
+
+It isn't autocomplete finishing your line. The agent gets a task, reads the files itself, makes a plan, edits several files, runs the build and the tests and hands the result back for review. You play tech lead and editor: you set the goal, the constraints and the taste, then approve or send it back.
+
+In practice it's a short loop you repeat all day:
+
+1. Describe what you want, with the reason ("everything stays static, content only changes on rebuild").
+2. The agent proposes a plan, and you correct it before a single line is written.
+3. The agent implements in small steps and checks each one: lint, types, build, then the page in a browser.
+4. You look at the result and say what's off. Often that's one sentence.
+5. Commit, then the next step.
+
+## The spec is the new code
+
+When an agent writes the code, your most valuable output is a good description. A vague request gets you code that does something else, just very neatly.
+
+> The agent does exactly what you said. So the question is always whether you said what you meant.
+
+That's why it pays to write the rules that always apply into the project itself, instead of repeating them in every conversation. For this blog, that's the post conventions, dictionaries for both languages and small skills the agent runs on its own:
+
+```bash
+./dev.sh new            # new post, step by step
+./dev.sh check-post ai-driven-development
+./dev.sh check          # lint + TypeScript + build
+```
+
+The same goes for code: when the rules live in types, the agent can't "forget" them. If the English dictionary misses a translation, the build fails:
+
+```ts
+// en.ts must have every key from sr.ts
+const en: Dictionary = {
+  home: { cta: "Blog →" /* ... */ },
+};
+```
+
+## Where the agent shines, and where it doesn't
+
+| Task | How it goes | Why |
+| ---- | ----------- | --- |
+| Refactoring across many files | great | patiently changes every spot and checks the build right away |
+| Turning a design into code | very good | with screenshots after every change |
+| Configuration you don't know | good, with review | reads the docs for the exact library version |
+| Product decisions | weak | doesn't know what "good" means to your readers |
+| Tone and personal style | up to you | needs a clear example and your call |
+
+What surprised me most is how much verification matters. An agent that runs the build, opens the page and measures the spacing after each change catches bugs I would only have seen in production.
+
+## Traps
+
+- **Too much at once.** A big request makes a big change that's hard to review. Smaller steps, more frequent commits.
+- **Accepting blindly.** Code looks convincing even when it's wrong. Read the diff, not just the summary.
+- **Ambiguous words.** "Fix the footer" can mean ten things. Say exactly what bothers you.
+- **Forgotten context.** Decisions that aren't written down in the project don't exist in the next conversation.
+
+## My checklist
+
+- [x] Project rules written down in code and the README
+- [x] Every change passes lint, types and the build
+- [x] Checked in a browser, on desktop and mobile
+- [ ] Tests for logic that isn't just rendering
+- [ ] More real posts, fewer test ones
+
+If you want to see what that looks like in practice, have a look at [the other posts on the blog](/en/blog). They were made the same way, and some of them are exactly this kind of test.[^1]
+
+[^1]: This post is an example too: it was written to show how a page looks with every element on it.

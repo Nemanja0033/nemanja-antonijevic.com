@@ -6,13 +6,13 @@ const sr = {
   languageName: "Srpski",
 
   site: {
-    description: "Razvijam frontend & pišem detaljne tech artikle za ne baš obične developere.",
+    description: "Bavim se razvojem softvera & pišem detaljne tech artikle za ne baš obične developere.",
     madeBy: "razvio", // footer: "© 2026 · razvio <name>"
     languageSwitch: "Jezik",
   },
 
   home: {
-    heading: ["Razvijam frontend", "pišem detaljne tech artikle za ne baš obične developere"], // joined by an accent "&"
+    heading: ["Bavim se razvojem softvera", "pišem detaljne tech artikle za ne baš obične developere"], // joined by an accent "&"
     cta: "Blog →",
     linkedin: "LinkedIn profil",
     email: "Pošalji mejl",

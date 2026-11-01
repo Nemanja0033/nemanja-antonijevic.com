@@ -1,0 +1,74 @@
+export const meta = {
+  title: "AI-driven development: kako sam napravio ovaj blog sa agentom",
+  description: "Šta se menja kada kod piše AI agent, a ti postaješ urednik: koraci, zamke i šta i dalje radiš sam.",
+  date: "2026-11-01",
+  tags: ["ai", "workflow", "nextjs"],
+};
+
+Ovaj blog je napravljen u razgovoru. Nisam ručno kucao komponente, nego sam AI agentu govorio šta hoću, gledao šta je uradio i tražio izmene. Posle nekoliko dana tako mislim da je najveća promena u tome šta znači „raditi na projektu": manje kucam, a mnogo više odlučujem.
+
+## Šta je zapravo AI-driven development
+
+To nije autocomplete koji dopuni liniju koda. Agent dobije zadatak, sam pročita fajlove, napravi plan, izmeni više fajlova, pokrene build i testove i vrati ti rezultat na pregled. Ti si u ulozi tehničkog lida i urednika: postavljaš cilj, ograničenja i ukus, a odobravaš ili vraćaš na doradu.
+
+U praksi to izgleda kao kratak ciklus koji se stalno ponavlja:
+
+1. Opišeš šta želiš, sa razlogom („sve treba da bude statično, sadržaj se menja samo build-om").
+2. Agent predloži plan, a ti ga ispraviš pre nego što napiše ijednu liniju.
+3. Agent implementira u malim koracima i proverava svaki: lint, tipove, build, pa izgled u browseru.
+4. Ti pogledaš rezultat i kažeš šta ne valja. Često je to jedna rečenica.
+5. Commit, pa sledeći korak.
+
+## Specifikacija je novi kod
+
+Kada agent piše kod, tvoj najvredniji izlaz postaje dobar opis. Nejasan zahtev daje kod koji radi nešto drugo, samo vrlo uredno.
+
+> Agent radi tačno ono što si rekao. Zato je pitanje uvek da li si rekao ono što misliš.
+
+Zato se isplati da u projekat upišeš pravila koja važe uvek, umesto da ih ponavljaš u svakom razgovoru. Kod ovog bloga to su konvencije za postove, rečnici za oba jezika i mali skill-ovi koje agent pokreće sam:
+
+```bash
+./dev.sh new            # novi zapis, korak po korak
+./dev.sh check-post ai-driven-development
+./dev.sh check          # lint + TypeScript + build
+```
+
+Isto važi za kod: kada su pravila zapisana kao tipovi, agent ne može da ih „zaboravi". Ako u engleskom rečniku nedostaje prevod, build pada:
+
+```ts
+// en.ts mora da ima sve ključeve iz sr.ts
+const en: Dictionary = {
+  home: { cta: "Blog →" /* ... */ },
+};
+```
+
+## Gde agent briljira, a gde ne
+
+| Zadatak | Kako ide | Zašto |
+| ------- | -------- | ----- |
+| Refaktorisanje u više fajlova | odlično | strpljivo menja svako mesto i odmah proverava build |
+| Prenošenje dizajna u kod | vrlo dobro | uz snimke ekrana posle svake izmene |
+| Konfiguracija koju ne poznaješ | dobro, uz proveru | čita dokumentaciju tačne verzije biblioteke |
+| Odluke o proizvodu | slabo | ne zna šta tvojim čitaocima znači „dobro" |
+| Ton i lični stil teksta | zavisi od tebe | treba mu jasan primer i tvoja reč |
+
+Najviše me je iznenadilo koliko je važna provera. Agent koji posle izmene sam pokrene build, otvori stranicu i izmeri razmake uhvati greške koje bih ja video tek u produkciji.
+
+## Zamke
+
+- **Previše odjednom.** Veliki zahtev daje veliku izmenu koju je teško pregledati. Manji koraci, češći commit-ovi.
+- **Slepo prihvatanje.** Kod izgleda uverljivo i kada je pogrešan. Gledaj diff, ne samo rezime.
+- **Dvosmislen jezik.** „Ispravi footer" može da znači deset stvari. Reci šta tačno smeta.
+- **Zaboravljeni kontekst.** Odluke koje nisu zapisane u projektu ne postoje za sledeći razgovor.
+
+## Moja kontrolna lista
+
+- [x] Pravila projekta zapisana u kodu i README-u
+- [x] Svaka izmena prolazi lint, tipove i build
+- [x] Izgled proveren u browseru, na desktopu i mobilnom
+- [ ] Testovi za logiku koja nije samo prikaz
+- [ ] Više pravih zapisa, manje probnih
+
+Ako želiš da vidiš kako to izgleda na delu, pogledaj [ostale zapise na blogu](/sr/blog). Nastali su na isti način, a neki od njih su upravo testovi za ovakve postove.[^1]
+
+[^1]: Ovaj zapis je takođe primer: napisan je da bi se videlo kako izgleda kompozicija stranice sa svim elementima.

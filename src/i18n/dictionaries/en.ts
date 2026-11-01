@@ -8,13 +8,13 @@ const en: Dictionary = {
   languageName: "English",
 
   site: {
-    description: "Building frontends & writing deep tech blogs for not-so-regular developers.",
+    description: "Building software & writing deep tech blogs for not-so-regular developers.",
     madeBy: "project by",
     languageSwitch: "Language",
   },
 
   home: {
-    heading: ["Building frontends", "writing deep tech blogs for not\u2011so\u2011regular developers"], // \u2011: hyphens that never break the line
+    heading: ["Building software", "writing deep tech blogs for not\u2011so\u2011regular developers"], // \u2011: hyphens that never break the line
     cta: "Blog →",
     linkedin: "LinkedIn profile",
     email: "Send an email",

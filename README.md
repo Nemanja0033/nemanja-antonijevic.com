@@ -30,8 +30,16 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 ./dev.sh check-post <slug>  # structural check of a post (meta, links, headings, translations)
 ./dev.sh version # bump patch/minor/major, add a CHANGELOG.md entry; the footer shows it
 ./dev.sh dev     # dev server on http://localhost:3000
-./dev.sh check   # lint + TypeScript + production build
+./dev.sh test    # unit and component tests (Vitest)
+./dev.sh test e2e  # end-to-end tests in a real browser (Playwright)
+./dev.sh check   # lint + TypeScript + unit tests + production build
 ```
+
+## Tests
+
+- **Unit and component tests** (Vitest + Testing Library) sit next to the code as `*.test.ts(x)`: i18n, the post helpers (pagination, meta validation, reading time, sidebar headings), every UI, blog and site component, and the `check-post` script against every post on disk. They run in seconds: `npm test`, or `npm run test:watch` while working.
+- **End-to-end tests** (Playwright) live in `e2e/` and run against a production build, on desktop and mobile Chrome: routing and 404s, the language switch, blog lists, tag pages and posts, SEO tags, JSON-LD, the sitemap, and an accessibility audit (headings, names, contrast, target sizes, skip link, reduced motion). `npm run test:e2e` builds the site first; the first run needs `npx playwright install chromium`.
+- Async Server Components (page layouts, `SiteHeader`) can't be rendered by Vitest, so the e2e tests cover them, as the Next.js testing guide recommends.
 
 To proofread a post (grammar in both languages plus the structural check), ask Claude Code to "check the post <slug>": the project skill in `.claude/skills/check-post/` handles it.
 

@@ -316,6 +316,8 @@ cmd_check() {
   npm run lint
   info "typescript"
   npx tsc --noEmit
+  info "unit tests"
+  npm test
   info "build"
   npx next build
 }
@@ -336,7 +338,8 @@ Upotreba: ./dev.sh <komanda>
   build   Produkcioni build
   start   Build pa produkcioni server
   lint    ESLint
-  check   Lint + TypeScript + build (sve što treba da prođe pre commit-a)
+  test    Unit i komponentni testovi (Vitest); "test e2e" za testove u browseru (Playwright)
+  check   Lint + TypeScript + unit testovi + build (sve što treba da prođe pre commit-a)
   help    Ova poruka
 EOF
 }
@@ -351,6 +354,9 @@ case "${1:-help}" in
   start) npx next build && npx next start ;;
   lint) npm run lint ;;
   check) cmd_check ;;
+  test)
+    if [[ "${2:-}" == "e2e" ]]; then npm run test:e2e; else npm test; fi
+    ;;
   help | -h | --help) cmd_help ;;
   *)
     warn "Nepoznata komanda: $1"

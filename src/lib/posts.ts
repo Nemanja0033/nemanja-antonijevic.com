@@ -66,7 +66,7 @@ export async function getPostLanguages(slug: string): Promise<Locale[]> {
   return (await getPostFiles()).find((post) => post.slug === slug)?.langs ?? [];
 }
 
-function parseMeta(file: string, meta: Partial<PostMeta> | undefined): PostMeta {
+export function parseMeta(file: string, meta: Partial<PostMeta> | undefined): PostMeta {
   if (!meta?.title || !meta.date || Number.isNaN(Date.parse(meta.date))) {
     throw new Error(
       `${file} must export \`meta\` with a \`title\` and an ISO \`date\``,
@@ -152,14 +152,14 @@ export function extraPageNumbers(posts: PostSummary[]): string[] {
 }
 
 // Words in the post body (without the meta export) at ~200 words per minute
-function readingMinutes(source: string) {
+export function readingMinutes(source: string) {
   const body = source.replace(/^export const meta[\s\S]*?\n};?\n/m, "");
   const words = body.split(/\s+/).filter(Boolean).length;
   return Math.max(1, Math.round(words / 200));
 }
 
 // The post's ## headings with the same ids rehype-slug gives them, for the sidebar
-function getHeadings(source: string): Heading[] {
+export function getHeadings(source: string): Heading[] {
   const slugger = new GithubSlugger();
   const headings: Heading[] = [];
   let inCode = false;

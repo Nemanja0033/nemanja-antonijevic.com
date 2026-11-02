@@ -3,6 +3,21 @@
 Every released version, newest first. `./dev.sh version` adds a new entry from the
 commit messages since the previous one; review and edit it before committing.
 
+## v0.2.0 – 2026-11-02
+
+- Add project skills for checking and re-toning posts
+- Extract UI primitives into src/components/ui
+- Add the AI-driven development post and broaden the headline
+- Document every component with TSDoc
+- Move the contact bubbles next to the Blog button
+- Shorten the Serbian headline and open the e-mail bubble in a new tab
+- Accessibility pass: skip link, new-tab notices, target sizes, names
+- Add a minimal "Latest posts" section to the home page
+- Add FloatingBubble, give each UI component its own folder
+- Extract PostCard and make UI base styles order-independent
+- Show 5 posts per page
+- Consistent type scale for page titles
+
 ## v0.1.0 – 2026-10-29
 
 - Initial setup of the project

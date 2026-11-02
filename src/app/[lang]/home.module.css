@@ -127,11 +127,13 @@
   color: var(--color-primary);
 }
 .hero h1 {
-  max-width: min(11em, 60vw); /* stays left of the photo blob */
+  /* About 25 characters per line, so the headline takes three lines on desktop,
+     and it stays left of the photo blob */
+  max-width: min(15em, 58vw);
   margin: 0;
-  font-size: clamp(2.25rem, 6vw, 5rem);
+  font-size: var(--font-size-display);
   font-weight: 800;
-  line-height: 1;
+  line-height: 1.08;
   letter-spacing: -0.03em;
   overflow-wrap: anywhere;
 }

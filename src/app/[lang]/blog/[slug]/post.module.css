@@ -20,9 +20,9 @@
 .header h1 {
   max-width: 13em;
   margin: 0 0 1.75rem;
-  font-size: clamp(2.125rem, 6vw, 4.5rem);
+  font-size: var(--font-size-display);
   font-weight: 800;
-  line-height: 1.03;
+  line-height: 1.08;
   letter-spacing: -0.03em;
   overflow-wrap: anywhere;
 }

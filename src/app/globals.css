@@ -31,6 +31,10 @@
   --radius-lg: 1.5rem; /* 24px: cards, sidebar */
   --radius-pill: 999px; /* Pills and buttons */
 
+  /* Type scale */
+  --font-size-display: clamp(2rem, 4vw, 3.5rem); /* 32–56px: the main title of every page */
+  --font-size-title: clamp(1.5rem, 3vw, 2.25rem); /* 24–36px: section titles, e.g. "Latest posts" */
+
   /* Layout */
   --container-width: 70rem; /* 1120px: max width of the page container */
   --post-width: 42.5rem; /* 680px: max width of post text */
@@ -53,6 +57,14 @@ body {
   color: var(--color-foreground);
   background: var(--color-background);
   -webkit-font-smoothing: antialiased;
+}
+
+/* Every page's main title shares one size, weight and spacing */
+h1 {
+  font-size: var(--font-size-display);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
 }
 
 a {

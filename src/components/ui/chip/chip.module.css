@@ -1,5 +1,7 @@
 /* Rounded link chips, built on the tokens in globals.css */
-.chip {
+/* :where() keeps these base styles at zero specificity, so a caller's className
+   always wins regardless of stylesheet order */
+:where(.chip) {
   display: inline-flex;
   align-items: center;
   border-radius: var(--radius-pill);

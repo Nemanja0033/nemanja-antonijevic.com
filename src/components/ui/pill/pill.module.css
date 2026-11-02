@@ -1,5 +1,7 @@
 /* Small rounded label for metadata, built on the tokens in globals.css */
-.pill {
+/* :where() keeps these base styles at zero specificity, so a caller's className
+   always wins regardless of stylesheet order */
+:where(.pill) {
   display: inline-block;
   padding: 0.125rem 0.875rem;
   border-radius: var(--radius-pill);

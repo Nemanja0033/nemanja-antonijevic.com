@@ -136,7 +136,7 @@ export async function getPostsByTag(lang: Locale, tag: string): Promise<PostSumm
   return (await getAllPosts(lang)).filter((post) => post.tags.includes(tag));
 }
 
-export const POSTS_PER_PAGE = 10;
+export const POSTS_PER_PAGE = 5;
 
 // One page of a post list; page numbers start at 1
 export function paginate(posts: PostSummary[], page: number) {

@@ -65,7 +65,7 @@ Post body. The title is rendered from `meta`, so start with `##` headings.
 
 Links to other pages inside a post include the language: `[blog](/sr/blog)`.
 
-Each tag gets its own page at `/<lang>/blog/tags/<tag>`. Lists show 10 posts per page (`/<lang>/blog/page/2`, …). A post folder can't be named `tags` or `page`. Reading time and the "on this page" sidebar are computed from the post at build time.
+Each tag gets its own page at `/<lang>/blog/tags/<tag>`. Lists show 5 posts per page (`/<lang>/blog/page/2`, …). A post folder can't be named `tags` or `page`. Reading time and the "on this page" sidebar are computed from the post at build time.
 
 Interface text lives in `src/i18n/dictionaries/` (`sr.ts`, `en.ts`); the build fails if a key is missing in one of them.
 

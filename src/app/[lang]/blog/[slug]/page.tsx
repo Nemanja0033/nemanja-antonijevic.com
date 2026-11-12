@@ -80,7 +80,7 @@ export default async function BlogPostPage({
             <time dateTime={meta.date}>{formatDate(lang, meta.date, "long")}</time>
           </Pill>
           <Pill>{dict.post.readingTime(readingMinutes)}</Pill>
-          <TagList lang={lang} tags={meta.tags} />
+          {/* <TagList lang={lang} tags={meta.tags} /> */}
         </div>
       </header>
 
@@ -111,12 +111,12 @@ export default async function BlogPostPage({
                 </ol>
               </>
             )}
-            {meta.tags.length > 0 && (
+            {/* {meta.tags.length > 0 && (
               <>
                 <h2>{dict.post.tags}</h2>
                 <TagList lang={lang} tags={meta.tags} />
               </>
-            )}
+            )} */}
           </Card>
         )}
       </div>

@@ -3,6 +3,12 @@
 Every released version, newest first. `./dev.sh version` adds a new entry from the
 commit messages since the previous one; review and edit it before committing.
 
+## v0.3.0 – 2026-11-12
+
+- Add unit, component and end-to-end tests
+- add post data
+- delete unused blog posts and images; update Serbian dictionary descriptions
+
 ## v0.2.0 – 2026-11-02
 
 - Add project skills for checking and re-toning posts

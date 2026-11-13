@@ -3,6 +3,15 @@
 Every released version, newest first. `./dev.sh version` adds a new entry from the
 commit messages since the previous one; review and edit it before committing.
 
+## v0.4.0 – 2026-11-13
+
+- Proofread and finish the Serbian "Frontend in the AI era" post
+- Point tone-cool at the dictionary instead of quoting the old headline
+- Add insert-change-auto and insert-change-manual skills
+- Replace tags with collections
+- Rename the collection to AI Renaissance; fix a typo in the Serbian headline
+- Keep the footer at the bottom of the screen on short pages
+
 ## v0.3.0 – 2026-11-12
 
 - Add unit, component and end-to-end tests

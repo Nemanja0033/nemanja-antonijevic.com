@@ -1,6 +1,6 @@
 /* Blog post page and its rendered MDX content, built on the tokens in globals.css */
 
-/* Header: back link, title, date / reading time / tag pills */
+/* Header: back link, title, date / reading time / collection */
 .header {
   padding-block: 2.5rem var(--space-lg);
 }

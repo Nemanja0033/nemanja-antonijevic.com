@@ -4,6 +4,7 @@ import en from "./dictionaries/en";
 import sr from "./dictionaries/sr";
 import {
   alternates,
+  collectionPath,
   defaultLocale,
   formatDate,
   getDictionary,
@@ -11,6 +12,7 @@ import {
   localePath,
   locales,
   toLocale,
+  translatePath,
 } from "./index";
 
 // Every key path in a dictionary, e.g. "blog.postCount" (values are not compared)
@@ -46,6 +48,21 @@ describe("config", () => {
   });
 });
 
+describe("collection paths", () => {
+  it("use each language's own segment", () => {
+    expect(collectionPath("sr")).toBe("/blog/kolekcije");
+    expect(collectionPath("en", "frontend")).toBe("/blog/collections/frontend");
+  });
+
+  it("translate between languages and leave other paths alone", () => {
+    expect(translatePath("/blog/kolekcije", "sr", "en")).toBe("/blog/collections");
+    expect(translatePath("/blog/kolekcije/x/page/2", "sr", "en")).toBe("/blog/collections/x/page/2");
+    expect(translatePath("/blog/collections/x", "en", "sr")).toBe("/blog/kolekcije/x");
+    expect(translatePath("/blog/kolekcije-post", "sr", "en")).toBe("/blog/kolekcije-post");
+    expect(translatePath("/blog/x", "sr", "en")).toBe("/blog/x");
+  });
+});
+
 describe("alternates", () => {
   it("links every language and points x-default at the default language", () => {
     expect(alternates("en", "/blog")).toEqual({
@@ -58,6 +75,17 @@ describe("alternates", () => {
     expect(alternates("en", "/blog/only-en", ["en"])).toEqual({
       canonical: "/en/blog/only-en",
       languages: { en: "/en/blog/only-en" },
+    });
+  });
+
+  it("translates the collections segment for the other language", () => {
+    expect(alternates("sr", "/blog/kolekcije/x")).toEqual({
+      canonical: "/sr/blog/kolekcije/x",
+      languages: {
+        sr: "/sr/blog/kolekcije/x",
+        en: "/en/blog/collections/x",
+        "x-default": "/sr/blog/kolekcije/x",
+      },
     });
   });
 });

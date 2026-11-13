@@ -12,8 +12,8 @@ const languages = {
   en: { name: "English", htmlLang: "en" },
 };
 const paths = {
-  sr: ["", "/blog", "/blog/test"],
-  en: ["", "/blog", "/blog/test", "/blog/only-en"],
+  sr: ["", "/blog", "/blog/test", "/blog/kolekcije/x"],
+  en: ["", "/blog", "/blog/test", "/blog/only-en", "/blog/collections/x"],
 };
 
 describe("LanguageSwitch", () => {
@@ -26,6 +26,11 @@ describe("LanguageSwitch", () => {
   it("links to the same page in the other language when it exists", () => {
     const nav = renderSwitch("/en/blog/test");
     expect(within(nav).getByRole("link", { name: "Srpski" })).toHaveAttribute("href", "/sr/blog/test");
+  });
+
+  it("translates the collections segment", () => {
+    const nav = renderSwitch("/en/blog/collections/x");
+    expect(within(nav).getByRole("link", { name: "Srpski" })).toHaveAttribute("href", "/sr/blog/kolekcije/x");
   });
 
   it("falls back to the other language's blog when the page doesn't exist there", () => {

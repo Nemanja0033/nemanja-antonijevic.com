@@ -20,8 +20,17 @@ test.describe("SEO", () => {
       "@type": "BlogPosting",
       headline: await page.getByRole("heading", { level: 1 }).textContent(),
       inLanguage: "en",
+      articleSection: expect.any(String),
       author: { "@type": "Person" },
     });
+  });
+
+  test("a collection's hreflang links use each language's segment", async ({ page }) => {
+    await page.goto("/sr/blog/kolekcije/frontend-engineering");
+    await expect(page.locator('link[rel="alternate"][hreflang="en"]')).toHaveAttribute(
+      "href",
+      /\/en\/blog\/collections\/frontend-engineering$/,
+    );
   });
 
   test("the sitemap lists both languages and every URL in it works", async ({ request }) => {

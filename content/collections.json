@@ -1,0 +1,12 @@
+{
+  "frontend-engineering": {
+    "sr": {
+      "name": "Frontend inženjerstvo",
+      "description": "Arhitektura, alati i praksa modernog frontenda, i kako se zanat menja uz AI."
+    },
+    "en": {
+      "name": "Frontend engineering",
+      "description": "Architecture, tools and practice of modern frontend, and how the craft changes with AI."
+    }
+  }
+}

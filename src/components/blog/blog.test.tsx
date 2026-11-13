@@ -6,8 +6,8 @@ import { LatestPosts } from "./latest-posts";
 import { Pagination } from "./pagination";
 import { PostCard } from "./post-card";
 import { PostList } from "./post-list";
-import { TagFilter } from "./tag-filter";
-import { TagList } from "./tag-list";
+import { CollectionChip } from "./collection-chip";
+import { CollectionFilter } from "./collection-filter";
 
 const cover: StaticImageData = { src: "/cover.jpg", width: 1600, height: 900, blurDataURL: "data:," };
 
@@ -16,38 +16,50 @@ const post = (overrides: Partial<PostSummary> = {}): PostSummary => ({
   title: "Markdown showcase",
   description: "An example post.",
   date: "2026-10-09",
-  tags: ["mdx", "css"],
+  collection: "frontend-engineering",
   cover,
   readingMinutes: 3,
   ...overrides,
 });
 
-describe("TagList", () => {
-  it("links every tag to its tag page in the given language", () => {
-    render(<TagList lang="sr" tags={["mdx", "css"]} />);
-    expect(screen.getByRole("link", { name: "mdx" })).toHaveAttribute("href", "/sr/blog/tags/mdx");
-    expect(screen.getByRole("link", { name: "css" })).toHaveAttribute("href", "/sr/blog/tags/css");
+describe("CollectionChip", () => {
+  it("shows the collection's name in the page language and links to its page", () => {
+    render(<CollectionChip lang="sr" slug="frontend-engineering" />);
+    expect(screen.getByRole("link", { name: "Frontend inženjerstvo" })).toHaveAttribute(
+      "href",
+      "/sr/blog/kolekcije/frontend-engineering",
+    );
   });
 
-  it("renders nothing without tags", () => {
-    const { container } = render(<TagList lang="en" tags={[]} />);
-    expect(container).toBeEmptyDOMElement();
+  it("uses the English name and segment", () => {
+    render(<CollectionChip lang="en" slug="frontend-engineering" />);
+    expect(screen.getByRole("link", { name: "Frontend engineering" })).toHaveAttribute(
+      "href",
+      "/en/blog/collections/frontend-engineering",
+    );
   });
 });
 
-describe("TagFilter", () => {
-  it('starts with "all" and marks the active tag', () => {
-    render(<TagFilter lang="en" tags={["mdx", "css"]} active="css" />);
-    const nav = screen.getByRole("navigation", { name: "Filter by tag" });
+describe("CollectionFilter", () => {
+  const collections = [
+    { slug: "a", name: "Alpha" },
+    { slug: "b", name: "Beta" },
+  ];
+
+  it('starts with "all" and marks the active collection', () => {
+    render(<CollectionFilter lang="en" collections={collections} active="b" />);
+    const nav = screen.getByRole("navigation", { name: "Filter by collection" });
     const links = within(nav).getAllByRole("link");
-    expect(links.map((l) => l.textContent)).toEqual(["all", "mdx", "css"]);
-    expect(within(nav).getByRole("link", { name: "css" })).toHaveAttribute("aria-current", "page");
+    expect(links.map((l) => l.textContent)).toEqual(["all", "Alpha", "Beta"]);
+    expect(within(nav).getByRole("link", { name: "Beta" })).toHaveAttribute("href", "/en/blog/collections/b");
+    expect(within(nav).getByRole("link", { name: "Beta" })).toHaveAttribute("aria-current", "page");
     expect(within(nav).getByRole("link", { name: "all" })).not.toHaveAttribute("aria-current");
   });
 
   it('marks "all" on the main blog list', () => {
-    render(<TagFilter lang="sr" tags={["mdx"]} />);
+    render(<CollectionFilter lang="sr" collections={collections} />);
     expect(screen.getByRole("link", { name: "sve" })).toHaveAttribute("aria-current", "page");
+    expect(screen.getByRole("link", { name: "Alpha" })).toHaveAttribute("href", "/sr/blog/kolekcije/a");
   });
 });
 
@@ -65,14 +77,14 @@ describe("Pagination", () => {
   });
 
   it("links page 2 back to the list's own URL, not /page/1", () => {
-    render(<Pagination lang="sr" page={2} totalPages={2} basePath="/blog/tags/css" />);
-    expect(screen.getByRole("link", { name: "← novije" })).toHaveAttribute("href", "/sr/blog/tags/css");
+    render(<Pagination lang="sr" page={2} totalPages={2} basePath="/blog/kolekcije/x" />);
+    expect(screen.getByRole("link", { name: "← novije" })).toHaveAttribute("href", "/sr/blog/kolekcije/x");
     expect(screen.queryByRole("link", { name: "starije →" })).toBeNull();
   });
 });
 
 describe("PostCard", () => {
-  it("shows date, reading time, title link, description, tags and URL", () => {
+  it("shows date, reading time, title link, description, collection and URL", () => {
     render(<PostCard lang="en" post={post()} />);
     const card = screen.getByRole("article");
     expect(within(card).getByText("Oct 9, 2026").closest("time")).toHaveAttribute("dateTime", "2026-10-09");
@@ -82,7 +94,10 @@ describe("PostCard", () => {
       "/en/blog/test",
     );
     expect(within(card).getByText("An example post.")).toBeInTheDocument();
-    expect(within(card).getByRole("link", { name: "mdx" })).toBeInTheDocument();
+    expect(within(card).getByRole("link", { name: "Frontend engineering" })).toHaveAttribute(
+      "href",
+      "/en/blog/collections/frontend-engineering",
+    );
     expect(within(card).getByText("/en/blog/test")).toBeInTheDocument();
   });
 

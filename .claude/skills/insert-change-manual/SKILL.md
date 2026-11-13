@@ -30,7 +30,7 @@ Find the exact spot with grep or by reading around the line. If the target match
 
 - **Heading text changed** → its `#id` changes (github-slugger: lowercase, spaces → `-`, punctuation dropped). Update any `](#old-id)` links in that file.
 - **Link target changed** → internal links keep the `/sr` or `/en` prefix.
-- **meta** → `date` stays `YYYY-MM-DD`, tags lowercase with dashes, description under 160 characters.
+- **meta** → `date` stays `YYYY-MM-DD`, `collection` must be a slug from `content/collections.json`, description under 160 characters.
 - **Other language:** don't edit it on your own. If the same fix obviously applies there too (same typo, same wrong fact, same heading), point it out and offer to apply it.
 
 ## 4. Check and report

@@ -1,0 +1,43 @@
+/* The collections index page, built on the tokens in globals.css */
+
+.titleRow {
+  padding-block: var(--space-lg) 1rem;
+}
+.titleRow h1 {
+  margin: 0;
+}
+.intro {
+  max-width: var(--post-width);
+  margin: 0 0 2rem;
+  font-size: 1.25rem;
+  color: var(--color-muted);
+}
+/* One card per collection; two columns when there is room */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr));
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.625rem;
+  height: 100%;
+}
+.card h2 {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+.card p {
+  flex: 1;
+  margin: 0;
+  font-size: 1.0625rem;
+}

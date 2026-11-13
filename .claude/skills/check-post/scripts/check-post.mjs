@@ -8,9 +8,10 @@ import path from "node:path";
 const ROOT = path.resolve(import.meta.dirname, "../../../..");
 const CONTENT_DIR = path.join(ROOT, "content", "blog");
 const LOCALES = ["sr", "en"];
-const RESERVED_SLUGS = ["tags", "page"];
+const RESERVED_SLUGS = ["page", "kolekcije", "collections"];
 const SLUG_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
-const TAG_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
+// content/collections.json: { "<slug>": { "sr": { name, description }, "en": { … } } }
+const COLLECTIONS = JSON.parse(readFileSync(path.join(ROOT, "content", "collections.json"), "utf8"));
 const DESCRIPTION_MAX = 160; // longer descriptions get cut off in search results
 
 const [slug, flag] = process.argv.slice(2);
@@ -60,9 +61,9 @@ for (const lang of langs) parsed[lang] = checkFile(lang);
 if (parsed.sr?.meta && parsed.en?.meta) {
   const [sr, en] = [parsed.sr, parsed.en];
   if (sr.meta.date !== en.meta.date) add("warning", rel(dir), `Different dates: sr ${sr.meta.date}, en ${en.meta.date}`);
-  const tagsSr = [...(sr.meta.tags ?? [])].sort().join(",");
-  const tagsEn = [...(en.meta.tags ?? [])].sort().join(",");
-  if (tagsSr !== tagsEn) add("warning", rel(dir), `Different tags: sr [${tagsSr}], en [${tagsEn}]`);
+  if (sr.meta.collection !== en.meta.collection) {
+    add("error", rel(dir), `Different collections: sr "${sr.meta.collection}", en "${en.meta.collection}"`);
+  }
   if (sr.h2.length !== en.h2.length) {
     add("warning", rel(dir), `Different number of ## headings: sr ${sr.h2.length}, en ${en.h2.length} (missing translation?)`);
   }
@@ -104,12 +105,19 @@ function checkFile(lang) {
     } else if (meta.description.length > DESCRIPTION_MAX) {
       add("warning", name, `meta.description is ${meta.description.length} characters; keep it under ${DESCRIPTION_MAX}`, 1);
     }
-    if (meta.tags !== undefined && !Array.isArray(meta.tags)) add("error", name, "meta.tags must be an array", 1);
-    for (const tag of meta.tags ?? []) {
-      if (!TAG_PATTERN.test(tag)) add("error", name, `Tag "${tag}": only lowercase letters, digits and dashes`, 1);
+    const known = Object.keys(COLLECTIONS).join(", ");
+    if (!meta.collection) {
+      add("error", name, `meta.collection is required (one of: ${known})`, 1);
+    } else if (!Object.hasOwn(COLLECTIONS, meta.collection)) {
+      add("error", name, `Unknown collection "${meta.collection}" (one of: ${known}; add new ones to content/collections.json)`, 1);
+    } else if (!COLLECTIONS[meta.collection][lang]?.name || !COLLECTIONS[meta.collection][lang]?.description) {
+      add("error", name, `Collection "${meta.collection}" has no ${lang} name and description in content/collections.json`, 1);
     }
+    if (meta.tags !== undefined) add("error", name, "meta.tags is no longer used; set meta.collection instead", 1);
     for (const key of Object.keys(meta)) {
-      if (!["title", "description", "date", "tags"].includes(key)) add("warning", name, `Unknown meta field "${key}"`, 1);
+      if (!["title", "description", "date", "collection", "tags"].includes(key)) {
+        add("warning", name, `Unknown meta field "${key}"`, 1);
+      }
     }
   }
 
@@ -162,7 +170,7 @@ function checkLink(name, line, lang, label, href) {
   }
   if (first !== lang) add("warning", name, `Link "${href}" points to the other language`, line);
   const post = href.match(/^\/(sr|en)\/blog\/([^/#?]+)\/?(?:[#?].*)?$/);
-  if (post && !["tags", "page"].includes(post[2]) && !slugsByLang[post[1]].includes(post[2])) {
+  if (post && !RESERVED_SLUGS.includes(post[2]) && !slugsByLang[post[1]].includes(post[2])) {
     add("error", name, `Link "${href}" points to a post that does not exist in ${post[1]}`, line);
   }
 }

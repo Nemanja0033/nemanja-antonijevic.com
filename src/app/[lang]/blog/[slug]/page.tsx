@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { TagList } from "@/components/blog/tag-list";
+import { CollectionChip } from "@/components/blog/collection-chip";
 import { Card, Pill } from "@/components/ui";
 import { alternates, formatDate, getDictionary, localePath, toLocale } from "@/i18n";
+import { getCollectionText } from "@/lib/collections";
 import { getAdjacentPosts, getPost, getPostLanguages, getPostSlugs } from "@/lib/posts";
 import { site } from "@/lib/site";
 import styles from "./post.module.css";
@@ -35,7 +36,7 @@ export async function generateMetadata({
       title: meta.title,
       description: meta.description,
       publishedTime: meta.date,
-      tags: meta.tags,
+      section: getCollectionText(lang, meta.collection).name,
     },
     twitter: { card: "summary_large_image" },
   };
@@ -61,7 +62,7 @@ export default async function BlogPostPage({
     description: meta.description,
     datePublished: meta.date,
     inLanguage: dict.htmlLang,
-    keywords: meta.tags,
+    articleSection: getCollectionText(lang, meta.collection).name,
     author: { "@type": "Person", name: site.author, url: site.url },
     image: `${url}/opengraph-image`,
     url,
@@ -80,7 +81,7 @@ export default async function BlogPostPage({
             <time dateTime={meta.date}>{formatDate(lang, meta.date, "long")}</time>
           </Pill>
           <Pill>{dict.post.readingTime(readingMinutes)}</Pill>
-          {/* <TagList lang={lang} tags={meta.tags} /> */}
+          <CollectionChip lang={lang} slug={meta.collection} />
         </div>
       </header>
 
@@ -97,26 +98,16 @@ export default async function BlogPostPage({
         <div className={styles.content}>
           <Content />
         </div>
-        {(headings.length > 0 || meta.tags.length > 0) && (
+        {headings.length > 0 && (
           <Card as="aside" className={styles.aside}>
-            {headings.length > 0 && (
-              <>
-                <h2>{dict.post.onThisPage}</h2>
-                <ol>
-                  {headings.map(({ id, text }) => (
-                    <li key={id}>
-                      <a href={`#${id}`}>{text}</a>
-                    </li>
-                  ))}
-                </ol>
-              </>
-            )}
-            {/* {meta.tags.length > 0 && (
-              <>
-                <h2>{dict.post.tags}</h2>
-                <TagList lang={lang} tags={meta.tags} />
-              </>
-            )} */}
+            <h2>{dict.post.onThisPage}</h2>
+            <ol>
+              {headings.map(({ id, text }) => (
+                <li key={id}>
+                  <a href={`#${id}`}>{text}</a>
+                </li>
+              ))}
+            </ol>
           </Card>
         )}
       </div>

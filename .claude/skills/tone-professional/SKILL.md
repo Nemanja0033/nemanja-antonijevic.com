@@ -24,7 +24,7 @@ Example — before: "Rebase je samo premeštanje commit-ova, ništa strašno, bu
 These are what make the post the same post, and several of them break the site if they change:
 
 - Topic, every fact, number, claim and the order of sections.
-- `meta.date`, `meta.tags`, the folder name (the URL slug).
+- `meta.date`, `meta.collection`, the folder name (the URL slug).
 - Code blocks and inline code, character for character.
 - Link targets, image URLs, JSX/HTML tags and their attributes; only the visible link text may be reworded.
 - The number and order of headings and their levels. Heading text may be reworded, but it changes the heading's `#id`, so update any `](#old-id)` links in the post to the new id (github-slugger rules: lowercase, spaces → `-`, punctuation dropped).

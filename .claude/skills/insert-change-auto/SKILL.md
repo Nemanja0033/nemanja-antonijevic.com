@@ -35,7 +35,7 @@ Find it (`./dev.sh posts` lists posts; a title → grep `title:` in `content/blo
 - Same voice and terminology as the post. Serbian: latinica, ekavica, correct diacritics. English: sentence-case headings.
 - Links: internal ones include the language (`/sr/...`, `/en/...`); external ones are plain markdown links (the site adds the new-tab handling).
 - **Both languages:** if the post has both `index.sr.mdx` and `index.en.mdx`, add the matching part to both, written naturally in each language, not translated word for word. Exception: if one file is still a placeholder (untranslated), only touch the real one and say so. If the user names one language, only touch that one.
-- Don't change `meta.date`, `meta.tags` or the slug. Update `meta.description` only if the addition changes what the post is about, and say so.
+- Don't change `meta.date`, `meta.collection` or the slug. Update `meta.description` only if the addition changes what the post is about, and say so.
 - A new heading gets an `#id` from github-slugger; the sidebar picks it up automatically.
 
 ## 5. Check and report

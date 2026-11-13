@@ -10,7 +10,7 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/blog">): P
   return {
     title: dict.blog.title,
     description: dict.blog.description,
-    alternates: alternates(lang, "/blog", await availableIn("/blog")),
+    alternates: alternates(lang, "/blog", await availableIn(lang, "/blog")),
   };
 }
 

@@ -4,12 +4,18 @@ import type { StaticImageData } from "next/image";
 import { notFound } from "next/navigation";
 import GithubSlugger from "github-slugger";
 import { locales, type Locale } from "@/i18n/config";
+import {
+  collectionSlugs,
+  getCollectionText,
+  hasCollection,
+  type Collection,
+} from "./collections";
 
 export type PostMeta = {
   title: string;
   description?: string;
   date: string; // ISO date, e.g. "2026-10-08"
-  tags: string[]; // URL-safe, e.g. ["nextjs", "css"]; optional in index.<lang>.mdx
+  collection: string; // slug of a collection in content/collections.json
 };
 
 export type PostSummary = PostMeta & {
@@ -25,8 +31,7 @@ export type Heading = { id: string; text: string };
 const CONTENT_DIR = path.join(process.cwd(), "content", "blog");
 const COVER_EXTENSIONS = ["jpg", "png", "webp"] as const;
 // Folder names that would collide with static routes under /blog
-const RESERVED_SLUGS = ["tags", "page"];
-const TAG_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
+const RESERVED_SLUGS = ["page", "kolekcije", "collections"];
 
 type PostFiles = {
   slug: string;
@@ -72,14 +77,12 @@ export function parseMeta(file: string, meta: Partial<PostMeta> | undefined): Po
       `${file} must export \`meta\` with a \`title\` and an ISO \`date\``,
     );
   }
-  const tags = meta.tags ?? [];
-  const invalid = tags.filter((tag) => !TAG_PATTERN.test(tag));
-  if (invalid.length) {
+  if (!meta.collection || !hasCollection(meta.collection)) {
     throw new Error(
-      `${file} has invalid tags (${invalid.join(", ")}); use lowercase letters, digits and dashes`,
+      `${file} must set \`collection\` to one of: ${collectionSlugs.join(", ")} (content/collections.json)`,
     );
   }
-  return { ...meta, tags } as PostMeta;
+  return meta as PostMeta;
 }
 
 export async function getPost(lang: Locale, slug: string) {
@@ -114,15 +117,16 @@ export async function getAllPosts(lang: Locale): Promise<PostSummary[]> {
   return posts.sort((a, b) => b.date.localeCompare(a.date));
 }
 
-// Every tag with its post count, most used first
-export async function getAllTags(lang: Locale): Promise<{ tag: string; count: number }[]> {
-  const counts = new Map<string, number>();
-  for (const post of await getAllPosts(lang)) {
-    for (const tag of post.tags) counts.set(tag, (counts.get(tag) ?? 0) + 1);
-  }
-  return [...counts]
-    .map(([tag, count]) => ({ tag, count }))
-    .sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag));
+// Collections with at least one post in this language, in the order of collections.json
+export async function getCollections(lang: Locale): Promise<Collection[]> {
+  const posts = await getAllPosts(lang);
+  return collectionSlugs
+    .map((slug) => ({
+      slug,
+      ...getCollectionText(lang, slug),
+      count: posts.filter((post) => post.collection === slug).length,
+    }))
+    .filter(({ count }) => count > 0);
 }
 
 // The posts right before and after this one, by date
@@ -132,8 +136,8 @@ export async function getAdjacentPosts(lang: Locale, slug: string) {
   return { newer: posts[index - 1], older: posts[index + 1] };
 }
 
-export async function getPostsByTag(lang: Locale, tag: string): Promise<PostSummary[]> {
-  return (await getAllPosts(lang)).filter((post) => post.tags.includes(tag));
+export async function getPostsByCollection(lang: Locale, slug: string): Promise<PostSummary[]> {
+  return (await getAllPosts(lang)).filter((post) => post.collection === slug);
 }
 
 export const POSTS_PER_PAGE = 5;

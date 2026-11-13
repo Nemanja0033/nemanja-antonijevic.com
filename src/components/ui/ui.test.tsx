@@ -18,8 +18,8 @@ describe("Pill", () => {
 
 describe("Chip", () => {
   it("is a link to its href", () => {
-    render(<Chip href="/en/blog/tags/css">css</Chip>);
-    expect(screen.getByRole("link", { name: "css" })).toHaveAttribute("href", "/en/blog/tags/css");
+    render(<Chip href="/en/blog/collections/css">css</Chip>);
+    expect(screen.getByRole("link", { name: "css" })).toHaveAttribute("href", "/en/blog/collections/css");
   });
 
   it("marks the current page with aria-current only when active", () => {
@@ -28,7 +28,7 @@ describe("Chip", () => {
         <Chip href="/en/blog" variant="filter" active>
           all
         </Chip>
-        <Chip href="/en/blog/tags/css" variant="filter">
+        <Chip href="/en/blog/collections/css" variant="filter">
           css
         </Chip>
       </>,

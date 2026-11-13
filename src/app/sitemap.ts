@@ -9,7 +9,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     locales.map(async (lang) =>
       Promise.all(
         (await getSitePaths(lang)).map(async ({ path, lastModified }) => {
-          const { languages } = alternates(lang, path, await availableIn(path));
+          const { languages } = alternates(lang, path, await availableIn(lang, path));
           return {
             url: `${site.url}${localePath(lang, path)}`,
             lastModified,

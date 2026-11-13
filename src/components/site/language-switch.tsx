@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { localePath, locales, type Locale } from "@/i18n/config";
+import { localePath, locales, translatePath, type Locale } from "@/i18n/config";
 import styles from "./site.module.css";
 
 /** Props for {@link LanguageSwitch}. */
@@ -27,9 +27,10 @@ type Props = {
  * "SR | EN" switch that opens the current page in the other language.
  *
  * @remarks
- * A post may exist in only one language, and tag or pagination pages differ between
- * languages. The switch therefore checks `paths`: if the same page exists in the other
- * language it links there, otherwise to that language's blog (inside the blog) or home
+ * A post may exist in only one language, collection and pagination pages differ between
+ * languages, and the collections section has a translated URL (`kolekcije` /
+ * `collections`). The switch therefore translates the path and checks `paths`: if the
+ * same page exists in the other language it links there, otherwise to that language's blog (inside the blog) or home
  * page. It is the only client component on the site, because it needs the current URL
  * (`usePathname`) while living in a shared layout.
  *
@@ -47,7 +48,8 @@ export function LanguageSwitch({ lang, label, paths, languages }: Props) {
       <ul className={styles.languages}>
         {locales.map((locale) => {
           const fallback = rest.startsWith("/blog") ? "/blog" : "";
-          const path = paths[locale].includes(rest) ? rest : fallback;
+          const translated = translatePath(rest, lang, locale);
+          const path = paths[locale].includes(translated) ? translated : fallback;
           return (
             <li key={locale}>
               <Link

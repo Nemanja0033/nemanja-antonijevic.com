@@ -19,7 +19,7 @@ export async function generateMetadata({
   const path = `/blog/page/${page}`;
   return {
     title: getDictionary(lang).blog.pageTitle(page),
-    alternates: alternates(lang, path, await availableIn(path)),
+    alternates: alternates(lang, path, await availableIn(lang, path)),
   };
 }
 

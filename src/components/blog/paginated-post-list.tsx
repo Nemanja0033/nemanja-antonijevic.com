@@ -1,49 +1,54 @@
+import Link from "next/link";
 import { Pill } from "@/components/ui";
-import { getDictionary, type Locale } from "@/i18n";
-import { getAllTags, paginate, type PostSummary } from "@/lib/posts";
+import { collectionPath, getDictionary, localePath, type Locale } from "@/i18n";
+import type { Collection } from "@/lib/collections";
+import { getCollections, paginate, type PostSummary } from "@/lib/posts";
+import { CollectionFilter } from "./collection-filter";
 import { Pagination } from "./pagination";
 import { PostList } from "./post-list";
-import { TagFilter } from "./tag-filter";
 import styles from "./blog.module.css";
 
 /** Props for {@link PaginatedPostList}. */
 type Props = {
   /** Language of the page; picks texts, dates and link prefixes. */
   lang: Locale;
-  /** Page heading, e.g. `"Blog"` or `"#css"`. */
+  /** Page heading, e.g. `"Blog"` or the collection's name. */
   title: string;
   /** The whole list, newest first. The component picks the slice for `page` itself. */
   posts: PostSummary[];
   /** 1-based page number (default `1`). Only values from `generateStaticParams` arrive here. */
   page?: number;
   /**
-   * Path of page 1 without the language, e.g. `"/blog"` or `"/blog/tags/css"`;
+   * Path of page 1 without the language, e.g. `"/blog"` or `"/blog/kolekcije/<slug>"`;
    * page `n` lives at `${basePath}/page/n`.
    */
   basePath: string;
-  /** Tag whose page this is; highlighted in the filter. Omit on the main blog list. */
-  activeTag?: string;
+  /**
+   * Collection whose page this is: adds a link back to all collections and its
+   * description, and highlights it in the filter. Omit on the main blog list.
+   */
+  collection?: Pick<Collection, "slug" | "description">;
 };
 
 /**
- * A complete post list page: title with post count, tag filter, one page of post
- * cards and the newer/older links.
+ * A complete post list page: title with post count, collection filter, one page of
+ * post cards and the newer/older links.
  *
  * @remarks
- * Four routes show a post list: `/blog`, `/blog/page/[page]`, `/blog/tags/[tag]` and
- * `/blog/tags/[tag]/page/[page]`. This server component keeps them identical, so each
- * route only loads its posts and passes them in. It runs at build time (the routes are
- * statically generated), so `getAllTags` costs nothing per request.
+ * Four routes show a post list: `/blog`, `/blog/page/[page]`, a collection and its
+ * pages 2..N. This server component keeps them identical, so each route only loads its
+ * posts and passes them in. It runs at build time (the routes are statically
+ * generated), so `getCollections` costs nothing per request.
  *
  * @example
  * ```tsx
- * // src/app/[lang]/blog/tags/[tag]/page.tsx
+ * // a collection page
  * <PaginatedPostList
  *   lang={lang}
- *   title={`#${tag}`}
- *   posts={await getPostsByTag(lang, tag)}
- *   basePath={`/blog/tags/${tag}`}
- *   activeTag={tag}
+ *   title={collection.name}
+ *   posts={await getPostsByCollection(lang, collection.slug)}
+ *   basePath={collectionPath(lang, collection.slug)}
+ *   collection={collection}
  * />
  * ```
  */
@@ -53,18 +58,25 @@ export async function PaginatedPostList({
   posts,
   page = 1,
   basePath,
-  activeTag,
+  collection,
 }: Props) {
-  const tags = await getAllTags(lang);
+  const dict = getDictionary(lang);
+  const collections = await getCollections(lang);
   const current = paginate(posts, page);
 
   return (
     <>
+      {collection && (
+        <p className={styles.crumb}>
+          <Link href={localePath(lang, collectionPath(lang))}>{dict.collections.back}</Link>
+        </p>
+      )}
       <div className={styles.titleRow}>
         <h1>{title}</h1>
-        <Pill>{getDictionary(lang).blog.postCount(posts.length)}</Pill>
+        <Pill>{dict.blog.postCount(posts.length)}</Pill>
       </div>
-      <TagFilter lang={lang} tags={tags.map(({ tag }) => tag)} active={activeTag} />
+      {collection && <p className={styles.intro}>{collection.description}</p>}
+      <CollectionFilter lang={lang} collections={collections} active={collection?.slug} />
       <PostList lang={lang} posts={current.posts} />
       <Pagination
         lang={lang}

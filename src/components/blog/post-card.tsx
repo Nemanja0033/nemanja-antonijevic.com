@@ -3,24 +3,24 @@ import Link from "next/link";
 import { Card, Pill } from "@/components/ui";
 import { formatDate, getDictionary, localePath, type Locale } from "@/i18n";
 import type { PostSummary } from "@/lib/posts";
-import { TagList } from "./tag-list";
+import { CollectionChip } from "./collection-chip";
 import styles from "./blog.module.css";
 
 /** Props for {@link PostCard}. */
 type Props = {
   /** Language of the page; picks texts, date format and link prefixes. */
   lang: Locale;
-  /** The post to show: title, description, date, reading time, tags and cover. */
+  /** The post to show: title, description, date, reading time, collection and cover. */
   post: PostSummary;
 };
 
 /**
- * One post in a list: date, reading time, title, description, tags, URL and cover.
+ * One post in a list: date, reading time, title, description, collection, URL and cover.
  *
  * @remarks
  * The card is a {@link Card} laid out as text on the left and the cover on the right
  * (on phones the cover moves on top). Only the title is a link to the post, because
- * the tags inside link to their own pages and links can't be nested. The cover is a
+ * the collection chip inside links to its own page and links can't be nested. The cover is a
  * static import, so `next/image` knows its size and shows a blur placeholder.
  *
  * @example
@@ -46,7 +46,7 @@ export function PostCard({ lang, post }: Props) {
         </h2>
         {post.description && <p>{post.description}</p>}
         <div className={styles.footerRow}>
-          <TagList lang={lang} tags={post.tags} />
+          <CollectionChip lang={lang} slug={post.collection} />
           <span className={styles.slug}>{path}</span>
         </div>
       </div>

@@ -16,6 +16,7 @@ import {
   readingMinutes,
   type PostSummary,
 } from "./posts";
+import { collectionSlugs, getCollectionText } from "./collections";
 
 // Fake posts for the pagination helpers; only the count matters
 const posts = (n: number) =>
@@ -47,24 +48,34 @@ describe("extraPageNumbers", () => {
 describe("parseMeta", () => {
   const file = "content/blog/x/index.sr.mdx";
 
-  it("accepts a valid meta and defaults tags to []", () => {
-    expect(parseMeta(file, { title: "Naslov", date: "2026-11-01" })).toEqual({
+  const collection = collectionSlugs[0];
+
+  it("accepts a valid meta", () => {
+    expect(parseMeta(file, { title: "Naslov", date: "2026-11-01", collection })).toEqual({
       title: "Naslov",
       date: "2026-11-01",
-      tags: [],
+      collection,
     });
   });
 
   it("rejects a missing title or an invalid date, naming the file", () => {
-    expect(() => parseMeta(file, { date: "2026-11-01" })).toThrow(file);
-    expect(() => parseMeta(file, { title: "T", date: "not a date" })).toThrow(/ISO `date`/);
+    expect(() => parseMeta(file, { date: "2026-11-01", collection })).toThrow(file);
+    expect(() => parseMeta(file, { title: "T", date: "not a date", collection })).toThrow(/ISO `date`/);
     expect(() => parseMeta(file, undefined)).toThrow(file);
   });
 
-  it("rejects tags that aren't URL-safe", () => {
-    expect(() => parseMeta(file, { title: "T", date: "2026-11-01", tags: ["Next JS"] })).toThrow(
-      /invalid tags \(Next JS\)/,
+  it("requires a collection from content/collections.json", () => {
+    expect(() => parseMeta(file, { title: "T", date: "2026-11-01" })).toThrow(/`collection`/);
+    expect(() => parseMeta(file, { title: "T", date: "2026-11-01", collection: "nope" })).toThrow(
+      new RegExp(`one of: .*${collection}`),
     );
+  });
+});
+
+describe("collections.json", () => {
+  it.each(collectionSlugs)("%s has a URL-safe slug and a name and description in every language", (slug) => {
+    expect(slug).toMatch(/^[a-z0-9]+(-[a-z0-9]+)*$/);
+    for (const lang of ["sr", "en"] as const) expect(() => getCollectionText(lang, slug)).not.toThrow();
   });
 });
 

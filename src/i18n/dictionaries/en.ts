@@ -33,10 +33,15 @@ const en: Dictionary = {
     description: "Notes on software, tools and practice.",
     postCount: (n) => `${n} ${n === 1 ? "post" : "posts"}`,
     pageTitle: (page) => `Blog – page ${page}`,
-    tagDescription: (tag) => `Posts tagged #${tag}`,
-    tagPageTitle: (tag, page) => `#${tag} – page ${page}`,
-    filterLabel: "Filter by tag",
+    collectionPageTitle: (name, page) => `${name} – page ${page}`,
+    filterLabel: "Filter by collection",
     all: "all",
+  },
+
+  collections: {
+    title: "Collections",
+    description: "The topics I write about, each with its own posts.",
+    back: "← collections",
   },
 
   pagination: {
@@ -51,7 +56,6 @@ const en: Dictionary = {
     readingTime: (minutes) => `${minutes} min read`,
     onThisPage: "on this page",
     table: "Table",
-    tags: "tags",
     adjacentLabel: "More posts",
     older: "← older",
     newer: "newer →",

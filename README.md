@@ -25,7 +25,7 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 `./dev.sh` collects the everyday commands (`./dev.sh help` lists them):
 
 ```bash
-./dev.sh new     # new post, step by step: languages, titles, slug, date, tags, cover
+./dev.sh new     # new post, step by step: languages, titles, slug, date, collection, cover
 ./dev.sh posts   # every post with its date and languages
 ./dev.sh check-post <slug>  # structural check of a post (meta, links, headings, translations)
 ./dev.sh version # bump patch/minor/major, add a CHANGELOG.md entry; the footer shows it
@@ -38,12 +38,12 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 ## Tests
 
 - **Unit and component tests** (Vitest + Testing Library) sit next to the code as `*.test.ts(x)`: i18n, the post helpers (pagination, meta validation, reading time, sidebar headings), every UI, blog and site component, and the `check-post` script against every post on disk. They run in seconds: `npm test`, or `npm run test:watch` while working.
-- **End-to-end tests** (Playwright) live in `e2e/` and run against a production build, on desktop and mobile Chrome: routing and 404s, the language switch, blog lists, tag pages and posts, SEO tags, JSON-LD, the sitemap, and an accessibility audit (headings, names, contrast, target sizes, skip link, reduced motion). `npm run test:e2e` builds the site first; the first run needs `npx playwright install chromium`.
+- **End-to-end tests** (Playwright) live in `e2e/` and run against a production build, on desktop and mobile Chrome: routing and 404s, the language switch, blog lists, collection pages and posts, SEO tags, JSON-LD, the sitemap, and an accessibility audit (headings, names, contrast, target sizes, skip link, reduced motion). `npm run test:e2e` builds the site first; the first run needs `npx playwright install chromium`.
 - Async Server Components (page layouts, `SiteHeader`) can't be rendered by Vitest, so the e2e tests cover them, as the Next.js testing guide recommends.
 
 To proofread a post (grammar in both languages plus the structural check), ask Claude Code to "check the post <slug>": the project skill in `.claude/skills/check-post/` handles it.
 
-To change how a post sounds without changing what it says, ask for a tone: `tone-professional` (clear, neutral), `tone-casual` (conversational) or `tone-cool` (witty, zine style), e.g. "make the post <slug> cooler". They rewrite both languages and keep facts, code, links, date, tags and the slug; `git diff` shows the change.
+To change how a post sounds without changing what it says, ask for a tone: `tone-professional` (clear, neutral), `tone-casual` (conversational) or `tone-cool` (witty, zine style), e.g. "make the post <slug> cooler". They rewrite both languages and keep facts, code, links, date, collection and the slug; `git diff` shows the change.
 
 To add or change content, there are two skills: `insert-change-auto` takes a description (an idea, an example, a tone, a link) and writes it into the right place in the post's own voice, e.g. "add a section about code review to <slug>"; `insert-change-manual` makes an exact edit where you point (a word, a typo, a heading), e.g. "in <slug>, line 42: change X to Y", and nothing else.
 
@@ -67,7 +67,7 @@ export const meta = {
   title: "Post title",
   description: "Optional summary for the list, SEO and social cards.",
   date: "2026-10-29",
-  tags: ["nextjs", "css"], // optional; lowercase letters, digits and dashes
+  collection: "frontend-engineering", // required; a slug from content/collections.json
 };
 
 Post body. The title is rendered from `meta`, so start with `##` headings.
@@ -75,7 +75,26 @@ Post body. The title is rendered from `meta`, so start with `##` headings.
 
 Links to other pages inside a post include the language: `[blog](/sr/blog)`.
 
-Each tag gets its own page at `/<lang>/blog/tags/<tag>`. Lists show 5 posts per page (`/<lang>/blog/page/2`, …). A post folder can't be named `tags` or `page`. Reading time and the "on this page" sidebar are computed from the post at build time.
+## Collections
+
+Every post belongs to exactly one collection: a topic with its own name and description in each language. Collections are defined in `content/collections.json`:
+
+```json
+{
+  "frontend-engineering": {
+    "sr": { "name": "Frontend inženjerstvo", "description": "…" },
+    "en": { "name": "Frontend engineering", "description": "…" }
+  }
+}
+```
+
+The key is the slug, shared by both languages; order in the file is the order on the site. A new collection needs a name and description in both languages. A post that names a collection missing from the file fails the build.
+
+The collections section has a translated URL: `/sr/blog/kolekcije` and `/en/blog/collections` list every collection, and each one has its own page (`/sr/blog/kolekcije/<slug>`, `/en/blog/collections/<slug>`). A collection only appears in a language once it has a post in that language. The language switch, hreflang links and the sitemap translate the segment.
+
+## Lists
+
+Lists show 5 posts per page (`/<lang>/blog/page/2`, `/<lang>/blog/kolekcije/<slug>/page/2`, …). A post folder can't be named `page`, `kolekcije` or `collections`. Reading time and the "on this page" sidebar are computed from the post at build time.
 
 Interface text lives in `src/i18n/dictionaries/` (`sr.ts`, `en.ts`); the build fails if a key is missing in one of them.
 

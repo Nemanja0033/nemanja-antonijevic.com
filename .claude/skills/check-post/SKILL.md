@@ -1,11 +1,11 @@
 ---
 name: check-post
-description: Proofread and validate a blog post in this project (content/blog/<slug>/index.sr.mdx and index.en.mdx) — grammar and spelling in Serbian (Latin script) and English, plus structural correctness (meta, date, tags, links with the language prefix, headings, code blocks, cover, and whether the two translations match). Use this whenever the user asks to check, proofread, review, lektorisati or "proveri" a post, before publishing one, after ./dev.sh new, or when they mention grammar, typos or "da li je post ok", even if they only give the post's title or slug.
+description: Proofread and validate a blog post in this project (content/blog/<slug>/index.sr.mdx and index.en.mdx) — grammar and spelling in Serbian (Latin script) and English, plus structural correctness (meta, date, collection, links with the language prefix, headings, code blocks, cover, and whether the two translations match). Use this whenever the user asks to check, proofread, review, lektorisati or "proveri" a post, before publishing one, after ./dev.sh new, or when they mention grammar, typos or "da li je post ok", even if they only give the post's title or slug.
 ---
 
 # Check a blog post
 
-A post is a folder `content/blog/<slug>/` with `index.sr.mdx` and/or `index.en.mdx` and a shared `cover.{jpg,png,webp}`. Each file starts with `export const meta = { title, description?, date, tags? }`; the page renders the title itself, so the body starts with `##` headings. The rules the site enforces live in `src/lib/posts.ts`.
+A post is a folder `content/blog/<slug>/` with `index.sr.mdx` and/or `index.en.mdx` and a shared `cover.{jpg,png,webp}`. Each file starts with `export const meta = { title, description?, date, collection }`, where `collection` is a slug from `content/collections.json`; the page renders the title itself, so the body starts with `##` headings. The rules the site enforces live in `src/lib/posts.ts`.
 
 The check has two halves: a script for everything mechanical, and your own reading for language. Do both, then report together.
 
@@ -24,7 +24,7 @@ If two posts fit, ask which one.
 node .claude/skills/check-post/scripts/check-post.mjs <slug>
 ```
 
-It reports errors (`✗`, the build would fail or the page is broken) and warnings (`!`, worth fixing), each with `file:line`. It covers: slug and reserved names, cover, `meta` (valid JS, title, ISO date, tags format, description length, unknown fields), `#` headings in the body, skipped heading levels, missing `##` headings, unclosed or language-less code blocks, internal links without `/sr` or `/en`, links to posts that don't exist, images without alt text, and whether the translations agree (date, tags, number of headings and code blocks). Trust its findings rather than re-deriving them by eye; add `--json` if you want to process the output.
+It reports errors (`✗`, the build would fail or the page is broken) and warnings (`!`, worth fixing), each with `file:line`. It covers: slug and reserved names, cover, `meta` (valid JS, title, ISO date, a known collection with a name in that language, description length, unknown fields), `#` headings in the body, skipped heading levels, missing `##` headings, unclosed or language-less code blocks, internal links without `/sr` or `/en`, links to posts that don't exist, images without alt text, and whether the translations agree (date, collection, number of headings and code blocks). Trust its findings rather than re-deriving them by eye; add `--json` if you want to process the output.
 
 ## 3. Proofread the language
 

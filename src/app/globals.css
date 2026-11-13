@@ -1,13 +1,13 @@
 :root {
   /* Colors */
-  --color-primary: #2236c9; /* Accent: links, primary buttons, active tag, focus */
+  --color-primary: #2236c9; /* Accent: links, primary buttons, active filter, focus */
   --color-primary-hover: #1a2a9e; /* Accent hover state */
   --color-on-primary: #ffffff; /* Text on accent backgrounds */
   --color-background: #f4f1ea; /* Page background (paper) */
   --color-surface: #ffffff; /* Cards, sidebar, table background */
   --color-surface-muted: #e9e4d7; /* Inline code, disabled pills, dividers */
   --color-tint: #e3e7fb; /* Soft blue: date and count pills, blockquotes, decor */
-  --color-highlight: #ffe9a8; /* Soft yellow: tag pills, h2 highlight, <mark> */
+  --color-highlight: #ffe9a8; /* Soft yellow: collection chips, h2 highlight, <mark> */
   --color-foreground: #1e1e1e; /* Main text and headings */
   --color-muted: #5a564d; /* Secondary text: meta, footer, captions */
   --color-border: #e9e4d7; /* Hairlines: table rows, <hr> */

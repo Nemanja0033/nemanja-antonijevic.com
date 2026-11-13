@@ -32,10 +32,15 @@ const sr = {
     description: "Zapisi o softveru, alatima i praksi.",
     postCount: (n: number) => `${n} ${n % 10 === 1 && n % 100 !== 11 ? "zapis" : "zapisa"}`,
     pageTitle: (page: string) => `Blog – strana ${page}`,
-    tagDescription: (tag: string) => `Zapisi sa oznakom #${tag}`,
-    tagPageTitle: (tag: string, page: string) => `#${tag} – strana ${page}`,
-    filterLabel: "Filter po oznakama",
+    collectionPageTitle: (name: string, page: string) => `${name} – strana ${page}`,
+    filterLabel: "Filter po kolekcijama",
     all: "sve",
+  },
+
+  collections: {
+    title: "Kolekcije",
+    description: "Teme o kojima pišem, svaka sa svojim zapisima.",
+    back: "← kolekcije", // link from a collection page to the list of collections
   },
 
   pagination: {
@@ -50,7 +55,6 @@ const sr = {
     readingTime: (minutes: number) => `${minutes} min čitanja`,
     onThisPage: "na ovoj strani",
     table: "Tabela", // name of the scrollable table region in posts
-    tags: "oznake",
     adjacentLabel: "Susedni zapisi",
     older: "← starije",
     newer: "novije →",

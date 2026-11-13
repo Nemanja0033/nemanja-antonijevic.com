@@ -18,7 +18,17 @@ test.describe("routing", () => {
     });
   }
 
-  for (const url of ["/xyz", "/de/blog", "/blog", "/sr/blog/does-not-exist", "/en/blog/tags/does-not-exist"]) {
+  for (const url of [
+    "/xyz",
+    "/de/blog",
+    "/blog",
+    "/sr/blog/does-not-exist",
+    "/en/blog/collections/does-not-exist",
+    // each language has its own collections segment; the other one doesn't exist
+    "/en/blog/kolekcije",
+    "/sr/blog/collections",
+    "/en/blog/kolekcije/frontend-engineering",
+  ]) {
     test(`${url} is a 404`, async ({ page }) => {
       const response = await page.goto(url);
       expect(response?.status()).toBe(404);
@@ -56,17 +66,35 @@ test.describe("blog", () => {
     await expect(page.getByRole("navigation", { name: "More posts" })).toBeVisible();
   });
 
-  test("a tag page lists only posts with that tag", async ({ page }) => {
-    await page.goto("/en/blog");
-    const filter = page.getByRole("navigation", { name: "Filter by tag" });
-    const tag = filter.getByRole("link").nth(1);
-    const name = (await tag.textContent())!;
-    await tag.click();
-    await expect(page).toHaveURL(new RegExp(`/en/blog/tags/${name}$`));
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText(`#${name}`);
+  test("a collection page lists only posts in that collection", async ({ page }) => {
+    await page.goto("/sr/blog");
+    const filter = page.getByRole("navigation", { name: "Filter po kolekcijama" });
+    const collection = filter.getByRole("link").nth(1);
+    const name = (await collection.textContent())!;
+    await collection.click();
+    await expect(page).toHaveURL(/\/sr\/blog\/kolekcije\/[a-z0-9-]+$/);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(name);
+    await expect(filter.getByRole("link", { name, exact: true })).toHaveAttribute("aria-current", "page");
     for (const card of await page.getByRole("article").all()) {
       await expect(card.getByRole("link", { name, exact: true })).toBeVisible();
     }
+  });
+
+  test("the collections page lists every collection and links to each", async ({ page }) => {
+    await page.goto("/sr/blog/kolekcije/frontend-engineering");
+    await page.getByRole("link", { name: "← kolekcije" }).click();
+    await expect(page).toHaveURL(/\/sr\/blog\/kolekcije$/);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Kolekcije");
+    const first = page.getByRole("article").first().getByRole("heading", { level: 2 }).getByRole("link");
+    await expect(first).toHaveAttribute("href", /^\/sr\/blog\/kolekcije\/[a-z0-9-]+$/);
+  });
+
+  test("a post links to its collection", async ({ page }) => {
+    await page.goto("/en/blog/frontend-in-ai-era-to-be-or-not-to-be");
+    await expect(page.getByRole("link", { name: "Frontend engineering" }).first()).toHaveAttribute(
+      "href",
+      "/en/blog/collections/frontend-engineering",
+    );
   });
 
   test("the home page lists the latest posts and links to the blog", async ({ page }) => {
@@ -88,6 +116,12 @@ test.describe("language switch", () => {
     await page.getByRole("navigation", { name: "Language" }).getByRole("link", { name: "Srpski" }).click();
     await expect(page).toHaveURL(href!.replace("/en/", "/sr/"));
     await expect(page.locator("html")).toHaveAttribute("lang", "sr-Latn");
+  });
+
+  test("translates the collections segment", async ({ page }) => {
+    await page.goto("/sr/blog/kolekcije/frontend-engineering");
+    const switchLink = page.getByRole("navigation", { name: "Jezik" }).getByRole("link", { name: "English" });
+    await expect(switchLink).toHaveAttribute("href", "/en/blog/collections/frontend-engineering");
   });
 
   test("on the blog list links to the other language's blog", async ({ page }) => {

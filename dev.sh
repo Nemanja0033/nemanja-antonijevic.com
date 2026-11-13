@@ -5,9 +5,9 @@ set -euo pipefail
 cd "$(dirname "$0")"
 
 CONTENT_DIR="content/blog"
-RESERVED_SLUGS=("tags" "page") # collide with /blog/tags and /blog/page routes
+COLLECTIONS_FILE="content/collections.json"
+RESERVED_SLUGS=("page" "kolekcije" "collections") # collide with /blog/page and the collections routes
 SLUG_PATTERN='^[a-z0-9]+(-[a-z0-9]+)*$'
-TAG_PATTERN='^[a-z0-9]+(-[a-z0-9]+)*$'
 DATE_PATTERN='^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
 
 bold() { printf '\033[1m%s\033[0m\n' "$*"; }
@@ -155,25 +155,22 @@ cmd_new() {
   done
   echo
 
-  # 5. Tags, shared by both languages
-  info "5/6 Tagovi"
-  local tags_input tag tags=()
+  # 5. Collection, shared by both languages; the list comes from content/collections.json
+  info "5/6 Kolekcija"
+  local collections=() collection choice i
+  mapfile -t collections < <(node -e 'for (const [slug, c] of Object.entries(require("./'"$COLLECTIONS_FILE"'"))) console.log(`${slug}\t${c.sr?.name ?? c.en?.name}`)')
+  [[ ${#collections[@]} -gt 0 ]] || fail "$COLLECTIONS_FILE nema nijednu kolekciju; dodaj je pa pokreni ponovo."
+  for i in "${!collections[@]}"; do
+    printf '  %d) %s  (%s)\n' "$((i + 1))" "${collections[$i]#*$'\t'}" "${collections[$i]%%$'\t'*}"
+  done
+  echo "  Nova kolekcija se dodaje u $COLLECTIONS_FILE (naziv i opis na oba jezika)."
   while true; do
-    tags_input="$(ask "Tagovi odvojeni zarezom (npr. nextjs, css; Enter za bez tagova)")"
-    tags=()
-    local valid=true
-    IFS=',' read -ra parts <<<"$tags_input"
-    for tag in "${parts[@]}"; do
-      tag="$(echo "$tag" | xargs)" # trim
-      [[ -z "$tag" ]] && continue
-      if [[ "$tag" =~ $TAG_PATTERN ]]; then
-        tags+=("$tag")
-      else
-        warn "\"$tag\": samo mala slova, brojevi i crtice."
-        valid=false
-      fi
-    done
-    $valid && break
+    choice="$(ask "Broj kolekcije" "1")"
+    if [[ "$choice" =~ ^[0-9]+$ ]] && ((choice >= 1 && choice <= ${#collections[@]})); then
+      collection="${collections[$((choice - 1))]%%$'\t'*}"
+      break
+    fi
+    warn "Izaberi broj od 1 do ${#collections[@]}."
   done
   echo
 
@@ -202,7 +199,7 @@ cmd_new() {
     echo "  $lang:      \"${titles[$lang]}\" → /$lang/blog/$slug"
   done
   echo "  datum:   $date"
-  echo "  tagovi:  ${tags[*]:-(bez)}"
+  echo "  kolekcija: $collection"
   echo "  cover:   ${cover_src:-privremena slika}"
   echo
   confirm "Napravi zapis?" Y || fail "Prekinuto, ništa nije napravljeno."
@@ -221,11 +218,6 @@ cmd_new() {
     placeholder_cover "$cover_dest"
   fi
 
-  local tags_js="[]"
-  if [[ ${#tags[@]} -gt 0 ]]; then
-    tags_js="[$(printf '"%s", ' "${tags[@]}" | sed 's/, $//')]"
-  fi
-
   for lang in "${langs[@]}"; do
     local file="$CONTENT_DIR/$slug/index.$lang.mdx"
     {
@@ -233,7 +225,7 @@ cmd_new() {
       echo "  title: $(js_string "${titles[$lang]}"),"
       [[ -n "${descriptions[$lang]}" ]] && echo "  description: $(js_string "${descriptions[$lang]}"),"
       echo "  date: \"$date\","
-      echo "  tags: $tags_js,"
+      echo "  collection: \"$collection\","
       echo "};"
       echo
       "body_$lang"
@@ -326,7 +318,7 @@ cmd_help() {
   cat <<EOF
 Upotreba: ./dev.sh <komanda>
 
-  new     Novi blog zapis, korak po korak (jezici, naslov, slug, datum, tagovi, cover)
+  new     Novi blog zapis, korak po korak (jezici, naslov, slug, datum, kolekcija, cover)
   posts   Lista zapisa sa datumom i jezicima
   check-post <slug>
           Strukturna provera zapisa (meta, linkovi, naslovi, kod, prevodi);

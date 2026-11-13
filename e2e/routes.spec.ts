@@ -97,6 +97,15 @@ test.describe("blog", () => {
     );
   });
 
+  test("the footer sits at the bottom of the screen on a short page", async ({ page }) => {
+    for (const url of ["/sr/blog", "/sr/blog/kolekcije", "/sr/blog/does-not-exist"]) {
+      await page.goto(url);
+      const footer = (await page.locator("footer").boundingBox())!;
+      const height = page.viewportSize()!.height;
+      expect(Math.round(footer.y + footer.height), url).toBeGreaterThanOrEqual(height - 1);
+    }
+  });
+
   test("the home page lists the latest posts and links to the blog", async ({ page }) => {
     await page.goto("/sr");
     const latest = page.getByRole("region", { name: "Najnoviji zapisi" });

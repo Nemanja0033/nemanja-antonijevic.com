@@ -12,7 +12,7 @@ export default async function NotFound() {
   const dict = getDictionary(lang);
 
   return (
-    <div className="container">
+    <div className="container page">
       <SiteHeader lang={lang} />
       <main id="main" tabIndex={-1}>
         <h1>{dict.notFound.title}</h1>

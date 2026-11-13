@@ -20,7 +20,7 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
   const dict = getDictionary(lang);
 
   return (
-    <div className={styles.home}>
+    <div className={`page ${styles.home}`}>
       <div className={`container ${styles.top}`}>
         <SiteHeader lang={lang} brand={false} />
       </div>

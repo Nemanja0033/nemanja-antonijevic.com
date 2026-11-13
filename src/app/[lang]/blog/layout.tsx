@@ -7,7 +7,7 @@ export default async function BlogLayout({ children, params }: LayoutProps<"/[la
   const lang = toLocale((await params).lang);
 
   return (
-    <div className="container">
+    <div className="container page">
       <SiteHeader lang={lang} />
       <main id="main" tabIndex={-1}>
         {children}

@@ -22,7 +22,7 @@ export default function GlobalNotFound() {
         <a href="#main" className="skip-link">
           {getDictionary(defaultLocale).site.skipToContent}
         </a>
-        <div className="container">
+        <div className="container page">
           <SiteHeader lang={defaultLocale} />
           <main id="main" tabIndex={-1}>
             <h1>

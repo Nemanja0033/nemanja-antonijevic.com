@@ -9,7 +9,7 @@ Rewrite how the post says things, not what it says. The reader should learn exac
 
 ## The tone
 
-The site's headline is "Building frontends & writing deep tech blogs for not-so-regular developers", and the design is a playful zine. Write for that reader: a developer who knows their stuff and enjoys a bit of attitude.
+The site writes deep tech posts for "not-so-regular developers" (the current headline is `home.heading` in `src/i18n/dictionaries/en.ts`), and the design is a playful zine. Write for that reader: a developer who knows their stuff and enjoys a bit of attitude.
 
 - Punchy rhythm: mix short sentences with longer ones; a one-line paragraph or a sentence fragment for emphasis is fine. Lead each section with a hook.
 - Wit and opinions: dry humor, nerdy references, a bold take ("Comments lie. Function names don't get the chance."). One good joke per section beats five forced ones.

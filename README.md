@@ -45,6 +45,8 @@ To proofread a post (grammar in both languages plus the structural check), ask C
 
 To change how a post sounds without changing what it says, ask for a tone: `tone-professional` (clear, neutral), `tone-casual` (conversational) or `tone-cool` (witty, zine style), e.g. "make the post <slug> cooler". They rewrite both languages and keep facts, code, links, date, tags and the slug; `git diff` shows the change.
 
+To add or change content, there are two skills: `insert-change-auto` takes a description (an idea, an example, a tone, a link) and writes it into the right place in the post's own voice, e.g. "add a section about code review to <slug>"; `insert-change-manual` makes an exact edit where you point (a word, a typo, a heading), e.g. "in <slug>, line 42: change X to Y", and nothing else.
+
 ## Writing posts
 
 The site is in Serbian (`/sr`, the default; `/` redirects there) and English (`/en`).

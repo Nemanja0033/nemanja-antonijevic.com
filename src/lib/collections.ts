@@ -4,7 +4,7 @@ import type { Locale } from "@/i18n/config";
 export type CollectionText = { name: string; description: string };
 
 export type Collection = CollectionText & {
-  slug: string; // shared by every language, e.g. "frontend-engineering"
+  slug: string; // shared by every language, e.g. "ai-renaissance"
   count: number; // posts in this collection in the given language
 };
 

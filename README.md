@@ -67,7 +67,7 @@ export const meta = {
   title: "Post title",
   description: "Optional summary for the list, SEO and social cards.",
   date: "2026-10-29",
-  collection: "frontend-engineering", // required; a slug from content/collections.json
+  collection: "ai-renaissance", // required; a slug from content/collections.json
 };
 
 Post body. The title is rendered from `meta`, so start with `##` headings.
@@ -81,9 +81,9 @@ Every post belongs to exactly one collection: a topic with its own name and desc
 
 ```json
 {
-  "frontend-engineering": {
-    "sr": { "name": "Frontend inženjerstvo", "description": "…" },
-    "en": { "name": "Frontend engineering", "description": "…" }
+  "ai-renaissance": {
+    "sr": { "name": "AI Renesansa", "description": "…" },
+    "en": { "name": "AI Renaissance", "description": "…" }
   }
 }
 ```

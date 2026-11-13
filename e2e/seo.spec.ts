@@ -26,10 +26,10 @@ test.describe("SEO", () => {
   });
 
   test("a collection's hreflang links use each language's segment", async ({ page }) => {
-    await page.goto("/sr/blog/kolekcije/frontend-engineering");
+    await page.goto("/sr/blog/kolekcije/ai-renaissance");
     await expect(page.locator('link[rel="alternate"][hreflang="en"]')).toHaveAttribute(
       "href",
-      /\/en\/blog\/collections\/frontend-engineering$/,
+      /\/en\/blog\/collections\/ai-renaissance$/,
     );
   });
 

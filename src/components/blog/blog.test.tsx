@@ -16,7 +16,7 @@ const post = (overrides: Partial<PostSummary> = {}): PostSummary => ({
   title: "Markdown showcase",
   description: "An example post.",
   date: "2026-10-09",
-  collection: "frontend-engineering",
+  collection: "ai-renaissance",
   cover,
   readingMinutes: 3,
   ...overrides,
@@ -24,18 +24,18 @@ const post = (overrides: Partial<PostSummary> = {}): PostSummary => ({
 
 describe("CollectionChip", () => {
   it("shows the collection's name in the page language and links to its page", () => {
-    render(<CollectionChip lang="sr" slug="frontend-engineering" />);
-    expect(screen.getByRole("link", { name: "Frontend inženjerstvo" })).toHaveAttribute(
+    render(<CollectionChip lang="sr" slug="ai-renaissance" />);
+    expect(screen.getByRole("link", { name: "AI Renesansa" })).toHaveAttribute(
       "href",
-      "/sr/blog/kolekcije/frontend-engineering",
+      "/sr/blog/kolekcije/ai-renaissance",
     );
   });
 
   it("uses the English name and segment", () => {
-    render(<CollectionChip lang="en" slug="frontend-engineering" />);
-    expect(screen.getByRole("link", { name: "Frontend engineering" })).toHaveAttribute(
+    render(<CollectionChip lang="en" slug="ai-renaissance" />);
+    expect(screen.getByRole("link", { name: "AI Renaissance" })).toHaveAttribute(
       "href",
-      "/en/blog/collections/frontend-engineering",
+      "/en/blog/collections/ai-renaissance",
     );
   });
 });
@@ -94,9 +94,9 @@ describe("PostCard", () => {
       "/en/blog/test",
     );
     expect(within(card).getByText("An example post.")).toBeInTheDocument();
-    expect(within(card).getByRole("link", { name: "Frontend engineering" })).toHaveAttribute(
+    expect(within(card).getByRole("link", { name: "AI Renaissance" })).toHaveAttribute(
       "href",
-      "/en/blog/collections/frontend-engineering",
+      "/en/blog/collections/ai-renaissance",
     );
     expect(within(card).getByText("/en/blog/test")).toBeInTheDocument();
   });

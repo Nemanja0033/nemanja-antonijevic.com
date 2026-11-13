@@ -6,7 +6,7 @@ const sr = {
   languageName: "Srpski",
 
   site: {
-    description: "Frontend inzenjer koji piše detaljne tech artikle za ne baš obične developere.",
+    description: "Frontend inženjer koji piše detaljne tech artikle za ne baš obične developere.",
     madeBy: "", // footer: "© 2026 · razvio <name>"
     languageSwitch: "Jezik",
     skipToContent: "Preskoči na sadržaj",
@@ -16,7 +16,7 @@ const sr = {
   home: {
     // "<lead> <highlight> <tail>", the highlight in the accent color
     heading: {
-      lead: "Frontend inzenjer koji piše detaljne tech artikle za",
+      lead: "Frontend inženjer koji piše detaljne tech artikle za",
       highlight: "ne baš obične",
       tail: "developere",
     },

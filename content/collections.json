@@ -1,12 +1,12 @@
 {
-  "frontend-engineering": {
+  "ai-renaissance": {
     "sr": {
-      "name": "Frontend inženjerstvo",
-      "description": "Arhitektura, alati i praksa modernog frontenda, i kako se zanat menja uz AI."
+      "name": "AI Renesansa",
+      "description": "Kako AI menja softversko inženjerstvo, i šta to znači za ljude koji ga prave."
     },
     "en": {
-      "name": "Frontend engineering",
-      "description": "Architecture, tools and practice of modern frontend, and how the craft changes with AI."
+      "name": "AI Renaissance",
+      "description": "How AI is changing software engineering, and what that means for the people who build it."
     }
   }
 }

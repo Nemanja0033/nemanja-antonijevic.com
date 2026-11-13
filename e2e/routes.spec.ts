@@ -27,7 +27,7 @@ test.describe("routing", () => {
     // each language has its own collections segment; the other one doesn't exist
     "/en/blog/kolekcije",
     "/sr/blog/collections",
-    "/en/blog/kolekcije/frontend-engineering",
+    "/en/blog/kolekcije/ai-renaissance",
   ]) {
     test(`${url} is a 404`, async ({ page }) => {
       const response = await page.goto(url);
@@ -81,7 +81,7 @@ test.describe("blog", () => {
   });
 
   test("the collections page lists every collection and links to each", async ({ page }) => {
-    await page.goto("/sr/blog/kolekcije/frontend-engineering");
+    await page.goto("/sr/blog/kolekcije/ai-renaissance");
     await page.getByRole("link", { name: "← kolekcije" }).click();
     await expect(page).toHaveURL(/\/sr\/blog\/kolekcije$/);
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Kolekcije");
@@ -91,9 +91,9 @@ test.describe("blog", () => {
 
   test("a post links to its collection", async ({ page }) => {
     await page.goto("/en/blog/frontend-in-ai-era-to-be-or-not-to-be");
-    await expect(page.getByRole("link", { name: "Frontend engineering" }).first()).toHaveAttribute(
+    await expect(page.getByRole("link", { name: "AI Renaissance" }).first()).toHaveAttribute(
       "href",
-      "/en/blog/collections/frontend-engineering",
+      "/en/blog/collections/ai-renaissance",
     );
   });
 
@@ -119,9 +119,9 @@ test.describe("language switch", () => {
   });
 
   test("translates the collections segment", async ({ page }) => {
-    await page.goto("/sr/blog/kolekcije/frontend-engineering");
+    await page.goto("/sr/blog/kolekcije/ai-renaissance");
     const switchLink = page.getByRole("navigation", { name: "Jezik" }).getByRole("link", { name: "English" });
-    await expect(switchLink).toHaveAttribute("href", "/en/blog/collections/frontend-engineering");
+    await expect(switchLink).toHaveAttribute("href", "/en/blog/collections/ai-renaissance");
   });
 
   test("on the blog list links to the other language's blog", async ({ page }) => {

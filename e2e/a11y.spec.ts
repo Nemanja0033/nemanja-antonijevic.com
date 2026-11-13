@@ -1,6 +1,6 @@
 import { expect, type Page, test } from "@playwright/test";
 
-const pages = ["/sr", "/en", "/sr/blog", "/en/blog/collections/frontend-engineering", "/sr/blog/kolekcije", "/sr/blog/does-not-exist"];
+const pages = ["/sr", "/en", "/sr/blog", "/en/blog/collections/ai-renaissance", "/sr/blog/kolekcije", "/sr/blog/does-not-exist"];
 
 // Checks that run in the page: landmarks, headings, names, targets and contrast (WCAG 2.2 AA)
 async function audit(page: Page) {

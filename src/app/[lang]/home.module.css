@@ -145,11 +145,6 @@
   gap: 1rem;
   margin-top: 2.5rem;
 }
-/* The "Blog →" Button is slightly tilted, like the design */
-.cta {
-  rotate: -1.5deg;
-}
-
 
 @media (max-width: 700px) {
   .hero h1 {

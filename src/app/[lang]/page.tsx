@@ -54,7 +54,7 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
               {dict.home.heading.tail}
             </h1>
             <div className={styles.actions}>
-              <Button href={localePath(lang, "/blog")} size="lg" className={styles.cta}>
+              <Button href={localePath(lang, "/blog")} size="lg">
                 {dict.home.cta}
               </Button>
               <ul className={styles.contact}>
